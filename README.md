@@ -1,9 +1,11 @@
 ### Tips:因为Xiuno BBS 4.0开源项目暂时关闭，所以此项目仅作为备份使用，以下信息不确保有效性
 
 ### 【Xiuno BBS 4.0 是什么？】
-Xiuno BBS 4.0 是一款轻论坛产品，前端基于 BootStrap 4.0、JQuery 3，后端基于 PHP/7 MySQL XCache/Yac/Redis/Memcached...
+Xiuno BBS 4.0 是一款轻论坛产品，前端基于 BootStrap 4.0、JQuery 3，后端基于 PHP/8 MySQL 8 XCache/Yac/Redis/Memcached...
 
 自适应手机、平板、PC，有着非常方便的插件机制，不仅仅是一个轻论坛，还是一个良好的二次开发平台。
+
+> 本项目在原 Xiuno BBS 4.0.4 基础上进行了环境适配，现已支持 **PHP 8.0+** 与 **MySQL 8.0+**，详见 [CHANGELOG.md](CHANGELOG.md)。
 
 git： https://git.oschina.net/xiuno/xiunobbs.git
 
@@ -38,7 +40,7 @@ db 层采用了更加方便的接口，可以同时支持 SQL 和 NoSQL 的方�
 
 帖子支持 txt html markdown 三种格式，自带适度整合的 UMEditor 插件，修正了 UM 在 Bootstrap 4 下的很多问题。
 
-xiunophp 4.0 这个框架合并成了一个文件 xiunophp.min.php，只需要一个 include 就可以开始使用里面提供的方便的函数和全局变量。
+xiunophp 4.0 这个框架可以通过 `php tool/merge.php` 合并成一个文件 xiunophp.min.php，只需要一个 include 就可以开始使用里面提供的方便的函数和全局变量（当前默认加载已适配 PHP 8 的源文件）。
 
 Xiuno BBS 4 正式版经历了近 2 年，7 个 beta 版本，最终定型，这可能是最后一个大版本，放心动手二次开发吧。
 

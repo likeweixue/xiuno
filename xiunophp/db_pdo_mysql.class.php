@@ -59,12 +59,10 @@ class db_pdo_mysql {
 		try {
 			$attr = array(
 				PDO::ATTR_TIMEOUT => 5,
-				//PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 			);
-			$link = new PDO("mysql:host=$host;port=$port;dbname=$name", $user, $password, $attr);
-			//$link->setAttribute(PDO::ATTR_TIMEOUT, 5);
-			//$link->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-		} catch (Exception $e) {
+			$link = new PDO("mysql:host=$host;port=$port;dbname=$name;charset=$charset", $user, $password, $attr);
+		} catch (PDOException $e) {
 			$this->error($e->getCode(), '连接数据库服务器失败:'.$e->getMessage());
 			return FALSE;
 	        }
@@ -123,7 +121,7 @@ class db_pdo_mysql {
 			$t3 = substr($t2 - $t1, 0, 6);
 			//DEBUG AND $GLOBALS['gid'] == 1 AND xn_log("[$t3]".$sql, 'db_sql');
 			
-		} catch (Exception $e) {  
+		} catch (PDOException $e) {  
 			$this->error($e->getCode(), $e->getMessage());
 			return FALSE;
 	        }
@@ -137,7 +135,7 @@ class db_pdo_mysql {
 		$link = $this->link = $this->wlink;
 		$n = $t3 = 0;
 		try {
-			if(strtoupper(substr($sql, 0, 12) == 'CREATE TABLE')) {
+			if(strtoupper(substr($sql, 0, 12)) == 'CREATE TABLE') {
 				$fulltext = strpos($sql, 'FULLTEXT(') !== FALSE;
 				$highversion = version_compare($this->version(), '5.6') >= 0;
 				if(!$fulltext || ($fulltext && $highversion)) {
@@ -154,7 +152,7 @@ class db_pdo_mysql {
 			$t3 = substr($t2 - $t1, 0, 6);
 			//DEBUG AND $GLOBALS['gid'] == 1 AND xn_log("[$t3]".$sql, 'db_sql');
 			
-		} catch (Exception $e) {  
+		} catch (PDOException $e) {  
 			$this->error($e->getCode(), $e->getMessage());
 			return FALSE;
 	        }
@@ -200,7 +198,7 @@ class db_pdo_mysql {
 	}
 	
 	public function last_insert_id() {
-		return $this->wlink->lastinsertid();
+		return $this->wlink->lastInsertId();
 	}
 	
 	public function version() {
@@ -219,7 +217,8 @@ class db_pdo_mysql {
 	public function is_support_innodb() {
 		$arrlist = $this->sql_find('SHOW ENGINES');
 		$arrlist2 = arrlist_key_values($arrlist, 'Engine', 'Support');
-		return isset($arrlist2['InnoDB']) AND $arrlist2['InnoDB'] == 'YES';
+		// MySQL 8 中 InnoDB 的 Support 值为 DEFAULT，兼容 YES 与 DEFAULT
+		return isset($arrlist2['InnoDB']) AND in_array($arrlist2['InnoDB'], array('YES', 'DEFAULT'));
 	}
 
 	

@@ -78,10 +78,11 @@ if(empty($action)) {
 	if($method == 'GET') {
 
 		$succeed = 1;
-		$mysql_support = function_exists('mysql_connect');
+		// mysql_* 函数自 PHP 7 移除，db_mysql 类已改用 PDO 实现，统一检测 pdo_mysql 扩展
 		$pdo_mysql_support = extension_loaded('pdo_mysql');
-		$myisam_support = extension_loaded('pdo_mysql');
-		$innodb_support = extension_loaded('pdo_mysql');
+		$mysql_support = $pdo_mysql_support;
+		$myisam_support = $pdo_mysql_support;
+		$innodb_support = $pdo_mysql_support;
 
 		(!$mysql_support && !$pdo_mysql_support) AND message(-1, lang('evn_not_support_php_mysql'));
 
@@ -131,34 +132,31 @@ if(empty($action)) {
 		$r = db_connect($db);
 		if($r === FALSE) {
 			if($errno == 1049 || $errno == 1045) {
-				if($type == 'mysql') {
-					mysql_query("CREATE DATABASE $name");
-					$r = db_connect($db);
-				} elseif($type == 'pdo_mysql') {
-					if(strpos(':', $host) !== FALSE) {
-						$arr = explode(':', $host);
-						$host = $arr[0];
-						$port = $arr[1];
+				// mysql_* 函数自 PHP 7 移除，统一改用 PDO 建库
+				if(strpos($host, ':') !== FALSE) {
+					$arr = explode(':', $host);
+					$host = $arr[0];
+					$port = $arr[1];
+				} else {
+					$port = 3306;
+				}
+				try {
+					$attr = array(
+						PDO::ATTR_TIMEOUT => 5,
+						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+					);
+					$link = new PDO("mysql:host=$host;port=$port", $user, $password, $attr);
+					$r = $link->exec("CREATE DATABASE `$name` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
+					if($r === FALSE) {
+						$error = $link->errorInfo();
+						$errno = $error[1];
+						$errstr = $error[2];
 					} else {
-						//$host = $host;
-						$port = 3306;
+						$r = db_connect($db);
 					}
-					try {
-						$attr = array(
-							PDO::ATTR_TIMEOUT => 5,
-							//PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-						);
-						$link = new PDO("mysql:host=$host;port=$port", $user, $password, $attr);
-						$r = $link->exec("CREATE DATABASE `$name`");
-						if($r === FALSE) {
-							$error = $link->errorInfo();
-							$errno = $error[1];
-							$errstr = $error[2];
-						}
-					} catch (PDOException $e) {
-						$errno = $e->getCode();
-						$errstr = $e->getMessage();
-					}
+				} catch (PDOException $e) {
+					$errno = $e->getCode();
+					$errstr = $e->getMessage();
 				}
 			}
 			if($r === FALSE) {

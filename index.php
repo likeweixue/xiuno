@@ -29,7 +29,7 @@ $conf = (@include APP_PATH.'conf/conf.php') OR exit('<script>window.location="in
 !isset($conf['logo_mobile_url']) AND $conf['logo_mobile_url'] = 'view/img/logo.png';
 !isset($conf['logo_pc_url']) AND $conf['logo_pc_url'] = 'view/img/logo.png';
 !isset($conf['logo_water_url']) AND $conf['logo_water_url'] = 'view/img/water-small.png';
-$conf['version'] = '4.0.4';		// 定义版本号！避免手工修改 conf/conf.php
+$conf['version'] = '4.0.5';		// 定义版本号！避免手工修改 conf/conf.php
 
 // 转换为绝对路径，防止被包含时出错。
 substr($conf['log_path'], 0, 2) == './' AND $conf['log_path'] = APP_PATH.$conf['log_path']; 
@@ -38,11 +38,10 @@ substr($conf['upload_path'], 0, 2) == './' AND $conf['upload_path'] = APP_PATH.$
 
 $_SERVER['conf'] = $conf;
 
-if(DEBUG > 1) {
-	include XIUNOPHP_PATH.'xiunophp.php';
-} else {
-	include XIUNOPHP_PATH.'xiunophp.min.php';
-}
+// 兼容 PHP 8：xiunophp.min.php 为合并压缩文件，其中内嵌了旧版 mysql_* 与 magic_quotes 代码，
+// 在 PHP 8 下会致命错误。此处统一加载已适配 PHP 8 的源文件 xiunophp.php。
+// 如需重新生成 min 文件，可运行：php tool/merge.php
+include XIUNOPHP_PATH.'xiunophp.php';
 
 // 测试数据库连接 / try to connect database
 //db_connect() OR exit($errstr);
