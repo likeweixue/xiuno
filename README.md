@@ -1,3 +1,8 @@
+# 修罗论坛likeweixue个性化说明。
+## 本仓库复制自 https://github.com/aiminet/xiunobbs4.0 发布的第一个发行版https://github.com/likeweixue/xiuno/releases/tag/v4.0.4 是原始版本。
+## 个性化说明
+此版本是我 likeweixue 的一个 diy 版本，比如后台设置的布局调整，内置 markdown，富文本，bbcode，易文本之类的
+# 从这里开始是https://github.com/aiminet/xiunobbs4.0 的原始README文件。
 ### Tips:因为Xiuno BBS 4.0开源项目暂时关闭，所以此项目仅作为备份使用，以下信息不确保有效性
 
 ### 【Xiuno BBS 4.0 是什么？】
