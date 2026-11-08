@@ -75,6 +75,17 @@ if($action == 'login') {
 	$info['HTTP_X_FORWARDED_FOR'] = _SERVER('HTTP_X_FORWARDED_FOR');
 	$info['REMOTE_ADDR'] = _SERVER('REMOTE_ADDR');
 	
+	// 服务端 IP：优先通过域名解析获取公网 IP（云服务器/NAT 下 SERVER_ADDR 为内网 IP）
+	$server_ip = _SERVER('SERVER_ADDR');
+	$hostname = _SERVER('SERVER_NAME');
+	if($hostname && $hostname != 'localhost' && strpos($hostname, '.') !== FALSE && function_exists('gethostbyname')) {
+		$resolved = gethostbyname($hostname);
+		if($resolved && $resolved != $hostname && filter_var($resolved, FILTER_VALIDATE_IP)) {
+			$server_ip = $resolved;
+		}
+	}
+	$info['SERVER_ADDR'] = $server_ip;
+	
 	
 	$stat = array();
 	$stat['threads'] = thread_count();

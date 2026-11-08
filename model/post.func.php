@@ -353,12 +353,16 @@ function post_message_fmt(&$arr, $gid) {
 	// 超长内容截取
 	$arr['message'] = xn_substr($arr['message'], 0, 2028000);
 	
-	// 格式转换: 类型，0: html, 1: txt; 2: markdown; 3: ubb
+	// 格式转换: 类型，0: html, 1: txt; 2: markdown; 3: ubb; 4: 易文本
 	$arr['message_fmt'] = htmlspecialchars($arr['message']);
 	
 	// 入库的时候进行转换，编辑的时候，自行调取 message, 或者 message_fmt
 	$arr['doctype'] == 0 && $arr['message_fmt'] = ($gid == 1 ? $arr['message'] : xn_html_safe($arr['message']));
 	$arr['doctype'] == 1 && $arr['message_fmt'] = xn_txt_to_html($arr['message']);
+	$arr['doctype'] == 2 && $arr['message_fmt'] = xn_markdown_to_html($arr['message']);
+	$arr['doctype'] == 3 && $arr['message_fmt'] = xn_bbcode_to_html($arr['message']);
+	// 易文本：前端用 yitext.js 渲染为 HTML 后，以 doctype 0 提交；此处兜底按纯文本处理
+	$arr['doctype'] >= 4 && $arr['message_fmt'] = xn_txt_to_html($arr['message']);
 	
 	// hook post_message_fmt_end.php
 	

@@ -28,7 +28,10 @@
 										<img src="../<?php echo $_forum['icon_url']; ?>" class="forum" width="48" id="img_<?php echo $_fid;?>" />
 									</td>
 									<td>
-										<input type="file" multiple="multiple" accept=".jpg,.jpeg,.png,.gif,.bmp" class="form-control" name="icon[<?php echo $_fid;?>]" value="" data-assoc="img_<?php echo $_fid;?>" placeholder="<?php echo lang('forum_icon');?>" />
+										<label class="upload-arrow" title="<?php echo lang('forum_icon');?>">
+											<i class="icon-upload"></i>
+											<input type="file" multiple="multiple" accept=".jpg,.jpeg,.png,.gif,.bmp" name="icon[<?php echo $_fid;?>]" value="" data-assoc="img_<?php echo $_fid;?>" />
+										</label>
 									</td>
 									<td><input type="text" class="form-control" name="name[<?php echo $_fid;?>]" value="<?php echo $_forum['name']; ?>" placeholder="<?php echo lang('forum_name');?>" /></td>
 									<td><input type="text" class="form-control" name="rank[<?php echo $_fid;?>]" value="<?php echo $_forum['rank']; ?>" placeholder="<?php echo lang('forum_rank');?>" /></td>

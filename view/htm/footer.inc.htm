@@ -52,6 +52,87 @@
 	<script src="<?php echo $conf['view_url'];?>js/bbs.js<?php echo $static_version;?>"></script>
 	<!--{hook footer_js_after.htm}-->
 	
+	<script>
+	// 侧边栏日历面板
+	$(function() {
+		var jcal = $('.card-calendar');
+		if(!jcal.length) return;
+		var now = new Date();
+		var curYear = now.getFullYear(), curMonth = now.getMonth();
+		var WEEK = ['<?php echo lang('sun');?>','<?php echo lang('mon');?>','<?php echo lang('tue');?>','<?php echo lang('wed');?>','<?php echo lang('thu');?>','<?php echo lang('fri');?>','<?php echo lang('sat');?>'];
+		
+		function render() {
+			var firstDay = new Date(curYear, curMonth, 1).getDay();
+			var daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
+			jcal.find('.cal-title').text(curYear + '<?php echo lang('year');?> ' + (curMonth + 1) + '<?php echo lang('month');?>');
+			var html = '';
+			var day = 1;
+			for(var i = 0; i < 6; i++) {
+				html += '<tr>';
+				for(var j = 0; j < 7; j++) {
+					if(i === 0 && j < firstDay) {
+						html += '<td></td>';
+					} else if(day > daysInMonth) {
+						html += '<td></td>';
+					} else {
+						var today = (day === now.getDate() && curMonth === now.getMonth() && curYear === now.getFullYear());
+						html += '<td' + (today ? ' class="cal-today"' : '') + '>' + day + '</td>';
+						day++;
+					}
+				}
+				html += '</tr>';
+				if(day > daysInMonth) break;
+			}
+			jcal.find('tbody').html(html);
+		}
+		jcal.on('click', '.cal-nav', function() {
+			var delta = parseInt($(this).data('delta'));
+			curMonth += delta;
+			if(curMonth < 0) { curMonth = 11; curYear--; }
+			if(curMonth > 11) { curMonth = 0; curYear++; }
+			render();
+		});
+		render();
+	});
+	
+	// 顶栏搜索：点击图标展开输入框
+	$(function() {
+		var jsearch = $('.header-search');
+		var jinput = jsearch.find('.nav-search-input');
+		jsearch.find('.nav-search-btn').on('click', function(e) {
+			if(!jsearch.hasClass('open')) {
+				e.preventDefault();
+				jsearch.addClass('open');
+				jinput.focus();
+			}
+		});
+		// 点击外部收起
+		$(document).on('click', function(e) {
+			if(!jsearch.is(e.target) && jsearch.has(e.target).length === 0) {
+				jsearch.removeClass('open');
+			}
+		});
+		// 回车提交
+		jsearch.on('submit', function() {
+			if(!jinput.val()) return false;
+		});
+	});
+	
+	// 顶栏用户头像下拉
+	$(function() {
+		var juser = $('.nav-user');
+		juser.find('.nav-user-toggle').on('click', function(e) {
+			e.stopPropagation();
+			juser.toggleClass('open');
+		});
+		$(document).on('click', function(e) {
+			if(!juser.is(e.target) && juser.has(e.target).length === 0) {
+				juser.removeClass('open');
+			}
+		});
+	});
+	</script>
+	
 </body>
 <!--{hook footer_body_after.htm}-->
 </html>

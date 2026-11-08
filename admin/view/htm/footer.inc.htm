@@ -12,8 +12,12 @@
 <?php $static_version = $conf['static_version'];?>
 
 			<?php echo xn_debug_info();?>
-		</div>
-	</main>
+					</div>
+				</main>
+
+			</div><!-- /.admin-content -->
+		</div><!-- /.admin-body -->
+	</div><!-- /.admin-layout -->
 
 	<!--{hook admin_footer_footer_before.htm}-->
 	
@@ -56,6 +60,17 @@
 	var fid = <?php echo $fid;?>;
 	</script>
 	<script src="../view/js/bbs.js<?php echo $static_version;?>"></script>
+	
+	<script>
+	// 移动端侧边栏展开/收起
+	$('.admin-sidebar-toggle').on('click', function() {
+		$('.admin-layout').toggleClass('sidebar-open');
+	});
+	// 点击内容区收起侧边栏
+	$('.admin-content').on('click', function() {
+		$('.admin-layout').removeClass('sidebar-open');
+	});
+	</script>
 	
 	<!--{hook admin_footer_js_after.htm}-->
 	

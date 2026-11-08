@@ -127,6 +127,8 @@ CREATE TABLE bbs_thread (
   firstpid int(11) unsigned NOT NULL default '0',	# 首贴 pid
   lastuid int(11) unsigned NOT NULL default '0',	# 最近参与的 uid
   lastpid int(11) unsigned NOT NULL default '0',	# 最后回复的 pid
+  digest tinyint(1) unsigned NOT NULL default '0',	# 精华: 0 普通, 1 精华
+  highlight char(16) NOT NULL default '',		# 高亮颜色，如 #ff0000，空表示无高亮
   PRIMARY KEY (tid),					# 主键
   KEY (lastpid),					# 最后回复排序
   KEY (fid, tid),					# 发帖时间排序，正序。数据量大时可以考虑建立小表，对小表进行分区优化，只有数据量达到千万级以上时才需要。
@@ -300,3 +302,45 @@ CREATE TABLE `bbs_table_day` (
   PRIMARY KEY (`year`, `month`, `day`, `table`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+# 导航菜单表，前台顶部导航栏的自定义菜单（可由后台 DIY 增删改查）
+DROP TABLE IF EXISTS `bbs_nav`;
+CREATE TABLE `bbs_nav` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '菜单编号',
+  `name` char(32) NOT NULL DEFAULT '' COMMENT '菜单名称',
+  `url` char(255) NOT NULL DEFAULT '' COMMENT '菜单链接，可为站内或站外地址',
+  `fid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '关联版块 fid，版块自动同步时记录，0 表示纯自定义',
+  `rank` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '排序，数字越大越靠前',
+  PRIMARY KEY (`id`),
+  KEY `fid` (`fid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+# 标签表，帖子标签（后台可管理）
+DROP TABLE IF EXISTS `bbs_tag`;
+CREATE TABLE `bbs_tag` (
+  `tagid` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '标签编号',
+  `name` char(32) NOT NULL DEFAULT '' COMMENT '标签名称',
+  `threads` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '帖子数',
+  `rank` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '排序，数字越大越靠前',
+  PRIMARY KEY (`tagid`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+# 标签-帖子关联表
+DROP TABLE IF EXISTS `bbs_thread_tag`;
+CREATE TABLE `bbs_thread_tag` (
+  `tagid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '标签编号',
+  `tid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '帖子编号',
+  PRIMARY KEY (`tagid`, `tid`),
+  KEY `tid` (`tid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+# 友情链接表
+DROP TABLE IF EXISTS `bbs_link`;
+CREATE TABLE `bbs_link` (
+  `linkid` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '友链编号',
+  `name` char(64) NOT NULL DEFAULT '' COMMENT '网站名称',
+  `url` char(255) NOT NULL DEFAULT '' COMMENT '网站地址',
+  `rank` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '排序，数字越大越靠前',
+  PRIMARY KEY (`linkid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

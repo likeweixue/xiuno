@@ -4,9 +4,6 @@
 
 <div class="row">
 	<div class="col-lg-12">
-		<div class="btn-group mb-3" role="group">
-			<?php echo admin_tab_active($menu['setting']['tab'], 'base');?>
-		</div>
 		<div class="card">
 			<div class="card-body">
 				<!--
@@ -24,6 +21,23 @@
 					</div>
 					
 					<!--{hook admin_setting_sitename_after.htm}-->
+					
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('site_logo');?>：</label>
+						<div class="col-sm-10">
+							<img src="../<?php echo $conf['logo_pc_url'];?>" id="logo_preview" style="height: 40px; margin-bottom: 8px;" alt="logo">
+							<div>
+								<label class="upload-arrow" title="<?php echo lang('site_logo');?>">
+									<i class="icon-upload"></i>
+									<input type="file" accept=".jpg,.jpeg,.png,.gif,.bmp" id="logo_input">
+								</label>
+								<span class="text-grey small ml-2"><?php echo lang('site_logo_tips');?></span>
+							</div>
+							<input type="hidden" name="logo" id="logo" value="">
+						</div>
+					</div>
+					
+					<!--{hook admin_setting_logo_after.htm}-->
 					
 					<div class="form-group row">
 						<label class="col-sm-2 form-control-label"><?php echo lang('sitebrief');?>：</label>
@@ -61,6 +75,14 @@
 						<label class="col-sm-2 form-control-label"><?php echo lang('user_resetpw_on');?>：</label>
 						<div class="col-sm-10">
 							<?php echo $input['user_resetpw_on'];?>
+						</div>
+					</div>
+					
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('sidebar_pos');?>：</label>
+						<div class="col-sm-10">
+							<label class="custom-input custom-radio"><input type="radio" name="sidebar_pos" value="right" <?php echo array_value($conf, 'sidebar_pos', 'right') == 'right' ? 'checked="checked"' : '';?>> <?php echo lang('sidebar_right');?></label> &nbsp;
+							<label class="custom-input custom-radio"><input type="radio" name="sidebar_pos" value="left" <?php echo array_value($conf, 'sidebar_pos', 'right') == 'left' ? 'checked="checked"' : '';?>> <?php echo lang('sidebar_left');?></label> &nbsp;
 						</div>
 					</div>
 					
@@ -115,6 +137,18 @@ jform.on('submit', function() {
 });
 
 $('#nav li.nav-item-setting').addClass('active');
+
+// Logo 上传：转 base64 预览 + 存隐藏字段
+$('#logo_input').on('change', function(e) {
+	var file = this.files[0];
+	if(!file) return;
+	var reader = new FileReader();
+	reader.onload = function(ev) {
+		$('#logo_preview').attr('src', ev.target.result);
+		$('#logo').val(ev.target.result);
+	};
+	reader.readAsDataURL(file);
+});
 
 </script>
 

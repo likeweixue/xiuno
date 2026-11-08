@@ -203,6 +203,93 @@ if($action == 'top') {
 	// hook mod_delete_user_end.php
 	
 	message(0, lang('delete_successfully'));
+} elseif($action == 'digest') {
+	
+	if($method == 'GET') {
+		
+		include _include(APP_PATH.'view/htm/mod_digest.htm');
+		
+	} else {
+		
+		$digest = param('digest', 0);
+		
+		$tidarr = param('tidarr', array(0));
+		empty($tidarr) AND message(-1, lang('please_choose_thread'));
+		$threadlist = thread_find_by_tids($tidarr);
+			
+		// hook mod_digest_start.php
+		
+		foreach($threadlist as &$thread) {
+			$fid = $thread['fid'];
+			$tid = $thread['tid'];
+			if(forum_access_mod($fid, $gid, 'allowtop')) {
+				thread_update($tid, array('digest'=>$digest));
+				$arr = array(
+					'uid' => $uid,
+					'tid' => $thread['tid'],
+					'pid' => $thread['firstpid'],
+					'subject' => $thread['subject'],
+					'comment' => '',
+					'create_date' => $time,
+					'action' => 'digest',
+				);
+				modlog_create($arr);
+			}
+		}
+		
+		// hook mod_digest_end.php
+		
+		message(0, lang('set_completely'));
+	}
+	
+} elseif($action == 'highlight') {
+	
+	if($method == 'GET') {
+		
+		include _include(APP_PATH.'view/htm/mod_highlight.htm');
+		
+	} else {
+		
+		$color = param('color', '');
+		$bold = param('bold', 0);
+		$italic = param('italic', 0);
+		$underline = param('underline', 0);
+		
+		// 拼装高亮样式值，格式：颜色;粗体;斜体;下划线 如 #ff0000;1;0;0
+		$highlight = '';
+		if($color) $highlight = $color;
+		if($bold || $italic || $underline) {
+			$highlight .= ';'.($bold ? '1' : '0').';'.($italic ? '1' : '0').';'.($underline ? '1' : '0');
+		}
+		
+		$tidarr = param('tidarr', array(0));
+		empty($tidarr) AND message(-1, lang('please_choose_thread'));
+		$threadlist = thread_find_by_tids($tidarr);
+			
+		// hook mod_highlight_start.php
+		
+		foreach($threadlist as &$thread) {
+			$fid = $thread['fid'];
+			$tid = $thread['tid'];
+			if(forum_access_mod($fid, $gid, 'allowtop')) {
+				thread_update($tid, array('highlight'=>$highlight));
+				$arr = array(
+					'uid' => $uid,
+					'tid' => $thread['tid'],
+					'pid' => $thread['firstpid'],
+					'subject' => $thread['subject'],
+					'comment' => '',
+					'create_date' => $time,
+					'action' => 'highlight',
+				);
+				modlog_create($arr);
+			}
+		}
+		
+		// hook mod_highlight_end.php
+		
+		message(0, lang('set_completely'));
+	}
 }
 
 // hook mod_end.php

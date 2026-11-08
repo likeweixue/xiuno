@@ -3,14 +3,6 @@
 <!--{hook admin_user_list_start.htm}-->
 
 <div class="row">
-	<div class="col-12">
-		<div class="btn-group mb-3" role="group">
-			<?php echo admin_tab_active($menu['user']['tab'], 'list');?>
-		</div>
-	</div>
-</div>
-
-<div class="row">
 	<div class="col-md-2 mb-3">
 		<select id="srchtype" value="<?php echo $srchtype; ?>" class="form-control">
 			<option value=""><?php echo lang('search_type');?></option>

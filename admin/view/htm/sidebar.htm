@@ -1,0 +1,142 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_sidebar_start.htm}-->
+
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<h5><?php echo lang('admin_sidebar_panel');?></h5>
+				<p class="text-grey small mb-3"><?php echo lang('admin_sidebar_panel_tips');?></p>
+				<form action="<?php echo url('tag-panel');?>" method="post" id="panel_form">
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('sidebar_calendar');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['calendar_on'];?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('tag');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['tag_on'];?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('friendlink');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['link_on'];?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"></label>
+						<div class="col-sm-10">
+							<button type="submit" class="btn btn-primary" data-loading-text="<?php echo lang('submiting');?>..."><?php echo lang('confirm');?></button>
+						</div>
+					</div>
+				</form>
+				<hr>
+				<h5><?php echo lang('sidebar_friendlink');?></h5>
+				<p class="small text-grey"><?php echo lang('sidebar_friendlink_tips');?></p>
+				<form action="<?php echo url('sidebar-list');?>" method="post" id="form">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr align="center">
+									<th width="60"><?php echo lang('link_id');?></th>
+									<th><?php echo lang('link_name');?></th>
+									<th><?php echo lang('link_url');?></th>
+									<th width="100"><?php echo lang('link_rank');?></th>
+									<th width="100" class="text-center"><?php echo lang('delete');?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach($linklist as $link) { ?>
+								<tr align="center" rowid="<?php echo $link['linkid'];?>">
+									<td><?php echo $link['linkid'];?></td>
+									<td><input type="text" class="form-control" name="name[<?php echo $link['linkid'];?>]" value="<?php echo htmlspecialchars($link['name']);?>" placeholder="<?php echo lang('link_name');?>"></td>
+									<td><input type="text" class="form-control" name="url[<?php echo $link['linkid'];?>]" value="<?php echo htmlspecialchars($link['url']);?>" placeholder="http://"></td>
+									<td><input type="text" class="form-control" name="rank[<?php echo $link['linkid'];?>]" value="<?php echo $link['rank'];?>" placeholder="<?php echo lang('link_rank');?>"></td>
+									<td><a class="btn row_delete" role="button" tabindex="0"><?php echo lang('delete');?></a></td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</div>
+					<input type="hidden" name="delete[0]" value="0">
+					<p><a role="button" class="btn row_add">[+] <?php echo lang('link_add');?></a></p>
+					<p class="text-center">
+						<button type="submit" class="btn btn-primary" id="submit" data-loading-text="<?php echo lang('submiting');?>..." style="width: 10rem;"><?php echo lang('confirm');?></button>
+					</p>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook admin_sidebar_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+var jform = $('#form');
+var jsubmit = $('#submit');
+
+// 侧边栏开关表单
+var jpanel_form = $('#panel_form');
+jpanel_form.on('submit', function() {
+	var jbtn = jpanel_form.find('button[type="submit"]');
+	jbtn.button('loading');
+	var postdata = jpanel_form.serialize();
+	$.xpost(jpanel_form.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jbtn.button('reset');
+		} else {
+			alert(message);
+			jbtn.button('reset');
+		}
+	});
+	return false;
+});
+
+$('.row_add').on('click', function() {
+	var s = '<tr align="center" rowid="0">'
+		+ '<td></td>'
+		+ '<td><input type="text" class="form-control" name="name[0]" value="" placeholder="<?php echo lang('link_name');?>"></td>'
+		+ '<td><input type="text" class="form-control" name="url[0]" value="" placeholder="http://"></td>'
+		+ '<td><input type="text" class="form-control" name="rank[0]" value="0" placeholder="<?php echo lang('link_rank');?>"></td>'
+		+ '<td><a class="btn row_delete" role="button" tabindex="0"><?php echo lang('delete');?></a></td>'
+		+ '</tr>';
+	$('tbody').append(s);
+});
+
+jform.on('click', '.row_delete', function() {
+	var jtr = $(this).parents('tr');
+	var rowid = jtr.attr('rowid');
+	if(rowid > 0) {
+		var name = 'delete[' + rowid + ']';
+		if(jform.find('input[name="' + name + '"]').length == 0) {
+			jform.append('<input type="hidden" name="' + name + '" value="1">');
+		}
+	}
+	jtr.remove();
+});
+
+jform.on('submit', function() {
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			window.location.reload();
+		} else {
+			alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+</script>
+
+<!--{hook admin_sidebar_js.htm}-->

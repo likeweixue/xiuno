@@ -1,0 +1,95 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_tag_list_start.htm}-->
+
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<form action="<?php echo url('tag-list');?>" method="post" id="form">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr align="center">
+									<th width="60"><?php echo lang('tag_id');?></th>
+									<th><?php echo lang('tag_name');?></th>
+									<th width="100"><?php echo lang('tag_threads');?></th>
+									<th width="100"><?php echo lang('tag_rank');?></th>
+									<th width="100" class="text-center"><?php echo lang('tag_delete');?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach($taglist as $tag) { ?>
+								<tr align="center" rowid="<?php echo $tag['tagid'];?>">
+									<td><?php echo $tag['tagid'];?></td>
+									<td><input type="text" class="form-control" name="tag[<?php echo $tag['tagid'];?>]" value="<?php echo htmlspecialchars($tag['name']);?>" placeholder="<?php echo lang('tag_name');?>"></td>
+									<td><?php echo $tag['threads'];?></td>
+									<td><input type="text" class="form-control" name="rank[<?php echo $tag['tagid'];?>]" value="<?php echo $tag['rank'];?>" placeholder="<?php echo lang('tag_rank');?>"></td>
+									<td><a class="btn row_delete" role="button" tabindex="0"><?php echo lang('delete');?></a></td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</div>
+					<input type="hidden" name="delete[0]" value="0">
+					<p><a role="button" class="btn row_add">[+] <?php echo lang('tag_add');?></a></p>
+					<p class="text-center">
+						<button type="submit" class="btn btn-primary" id="submit" data-loading-text="<?php echo lang('submiting');?>..." style="width: 10rem;"><?php echo lang('confirm');?></button>
+					</p>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook admin_tag_list_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+var jform = $('#form');
+var jsubmit = $('#submit');
+
+// 增加一行
+$('.row_add').on('click', function() {
+	var s = '<tr align="center" rowid="0">'
+		+ '<td></td>'
+		+ '<td><input type="text" class="form-control" name="tag[0]" value="" placeholder="<?php echo lang('tag_name');?>"></td>'
+		+ '<td>0</td>'
+		+ '<td><input type="text" class="form-control" name="rank[0]" value="0" placeholder="<?php echo lang('tag_rank');?>"></td>'
+		+ '<td><a class="btn row_delete" role="button" tabindex="0"><?php echo lang('delete');?></a></td>'
+		+ '</tr>';
+	$('tbody').append(s);
+});
+
+// 删除一行：标记删除
+jform.on('click', '.row_delete', function() {
+	var jtr = $(this).parents('tr');
+	var rowid = jtr.attr('rowid');
+	if(rowid > 0) {
+		var name = 'delete[' + rowid + ']';
+		if(jform.find('input[name="' + name + '"]').length == 0) {
+			jform.append('<input type="hidden" name="' + name + '" value="1">');
+		}
+	}
+	jtr.remove();
+});
+
+jform.on('submit', function() {
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			window.location.reload();
+		} else {
+			alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+</script>
+
+<!--{hook admin_tag_list_js.htm}-->

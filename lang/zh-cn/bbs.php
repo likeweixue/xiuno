@@ -270,6 +270,80 @@ return array(
 	'close_thread' => '关闭主题',
 	'close_status' => '状态',
 	
+	// 帖子筛选标签
+	'thread_new' => '动态',
+	'thread_latest' => '最新',
+	'thread_hot' => '热门',
+	'thread_top' => '置顶',
+	'thread_digest' => '精华',
+	
+	// 精华 / 高亮
+	'digest' => '精华',
+	'highlight' => '高亮',
+	'digest_thread' => '精华主题',
+	'highlight_thread' => '高亮主题',
+	'digest_range' => '精华范围',
+	'digest_0' => '取消精华',
+	'digest_1' => '设为精华',
+	'highlight_color' => '高亮颜色',
+	'highlight_color_tips' => '选择主题标题显示的颜色',
+	'highlight_style' => '高亮样式',
+	'bold' => '粗体',
+	'italic' => '斜体',
+	'underline' => '下划线',
+	
+	// 编辑器
+	'editor_type' => '编辑格式',
+	'doctype_txt' => '纯文本',
+	'doctype_html' => '富文本',
+	'doctype_markdown' => 'Markdown',
+	'doctype_bbcode' => 'BBCode',
+	'doctype_yitext' => '易文本',
+	'heading' => '标题',
+	'strikethrough' => '删除线',
+	'quote' => '引用',
+	'code' => '代码',
+	'divider' => '分割线',
+	'link' => '链接',
+	'image' => '图片',
+	'split_preview' => '分栏预览',
+	'fullscreen' => '全屏',
+	
+	// 搜索
+	'search' => '搜索',
+	'search_keyword' => '请输入搜索关键词',
+	'search_result' => '搜索结果',
+	'search_total' => '共找到',
+	'search_none' => '没有找到相关内容',
+	
+	// 目录
+	'toc' => '目录',
+	
+	// 标签
+	'tag' => '标签',
+	'tag_tips' => '标签（用逗号或空格分隔，如：技术, 分享）',
+	'tag_not_exists' => '标签不存在',
+	
+	// 友链 / 日历
+	'friendlink' => '友情链接',
+	'prev_month' => '上个月',
+	'next_month' => '下个月',
+	'sun' => '日',
+	'mon' => '一',
+	'tue' => '二',
+	'wed' => '三',
+	'thu' => '四',
+	'fri' => '五',
+	'sat' => '六',
+	'year' => '年',
+	'month' => '月',
+	
+	// 用户下拉菜单
+	'user_menu' => '用户菜单',
+	'my_profile' => '我的资料',
+	'my_threads' => '我的帖子',
+	'my_posts' => '我的回复',
+	
 	// 检测相关
 	'mobile_format_mismatch'=>'手机格式不正确',
 	'email_too_long'=>'邮箱太长: {length}',

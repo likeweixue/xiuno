@@ -115,8 +115,25 @@ return array (
 	
 	// 禁止插件
 	'disabled_plugin' => 0, 
+	
+	// 站点风格配色（后台"风格"菜单可设置）
+	'style_header_bg' => '#343a40',		// 顶栏背景色
+	'style_header_text' => '#ffffff',	// 顶栏文字色
+	'style_footer_bg' => '#343a40',		// 底栏背景色
+	'style_footer_text' => '#999999',	// 底栏文字色
+	'style_primary' => '#1f4977',		// 主色调（发帖按钮、链接等），修罗默认深蓝
+	'style_body_bg' => '#ffffff',		// 界面背景色
+	'style_breadcrumb_bg' => '#e9ecef',	// 路径栏背景色
+	'style_cardheader_bg' => '#f7f7f9',	// 状态栏背景色
+	'style_threadlist_bg' => '#ffffff',	// 帖子页背景色
+	'style_aside_bg' => '#ffffff',		// 侧边栏背景色
+	
+	// 侧边栏面板开关（0 关，1 开，默认全部关闭）
+	'sidebar_calendar_on' => 0,		// 日历面板
+	'sidebar_tag_on' => 0,			// 标签面板
+	'sidebar_link_on' => 0,			// 友链面板
 	  
-	'version' => '4.0.5',
+	'version' => '4.0.6',
 	'static_version' => '?1.0',
 	'installed' => 0,
 );

@@ -8,6 +8,7 @@
 <?php $pid = G('pid');?>
 <?php $route = G('route');?>
 <?php $forumlist_show = G('forumlist_show');?>
+<?php $navlist = G('navlist');?>
 <?php $static_version = $conf['static_version'];?>
 <!--{hook header_start.htm}-->
 <!DOCTYPE html>
@@ -35,9 +36,10 @@
 	
 	<!--{hook header_link_before.htm}-->
 	
-	<link rel="shortcut icon" href="<?php echo $conf['view_url'];?>img/favicon.ico" />
-	<link rel="icon" sizes="32x32" href="<?php echo $conf['view_url'];?>img/favicon.ico">
-	<link rel="Bookmark" href="<?php echo $conf['view_url'];?>img/favicon.ico" />
+	<?php $favicon_url = is_file(APP_PATH.'upload/favicon.png') ? 'upload/favicon.png' : $conf['view_url'].'img/favicon.ico'; ?>
+	<link rel="shortcut icon" href="<?php echo $favicon_url;?>" />
+	<link rel="icon" sizes="32x32" href="<?php echo $favicon_url;?>">
+	<link rel="Bookmark" href="<?php echo $favicon_url;?>" />
 	
 	<!--{hook header_bootstrap_before.htm}-->
 	<?php $bootstrap_css = !empty($bootstrap_css) ? $bootstrap_css : $conf['view_url']."css/bootstrap.css".$static_version; ?>
@@ -51,9 +53,46 @@
 	
 	<!--{hook header_link_after.htm}-->
 	
+	<?php if(!empty($conf['style_primary']) || !empty($conf['style_header_bg']) || !empty($conf['style_body_bg']) || !empty($conf['style_breadcrumb_bg']) || !empty($conf['style_cardheader_bg']) || !empty($conf['style_threadlist_bg']) || !empty($conf['style_aside_bg'])) { ?>
+	<style>
+	<?php if(!empty($conf['style_header_bg'])) { ?>
+	#header { background-color: <?php echo $conf['style_header_bg'];?> !important; }
+	<?php } ?>
+	<?php if(!empty($conf['style_header_text'])) { ?>
+	#header .navbar-nav .nav-link, #header .navbar-brand { color: <?php echo $conf['style_header_text'];?> !important; }
+	<?php } ?>
+	<?php if(!empty($conf['style_footer_bg'])) { ?>
+	#footer { background-color: <?php echo $conf['style_footer_bg'];?> !important; }
+	<?php } ?>
+	<?php if(!empty($conf['style_footer_text'])) { ?>
+	#footer, #footer a { color: <?php echo $conf['style_footer_text'];?> !important; }
+	<?php } ?>
+	<?php if(!empty($conf['style_primary'])) { ?>
+	.btn-primary, .page-item.active .page-link { background-color: <?php echo $conf['style_primary'];?> !important; border-color: <?php echo $conf['style_primary'];?> !important; }
+	.nav-tabs .nav-link.active { color: <?php echo $conf['style_primary'];?> !important; background-color: #fff !important; border-color: transparent !important; }
+	a { color: <?php echo $conf['style_primary'];?>; }
+	<?php } ?>
+	<?php if(!empty($conf['style_body_bg'])) { ?>
+	body { background-color: <?php echo $conf['style_body_bg'];?> !important; }
+	<?php } ?>
+	<?php if(!empty($conf['style_breadcrumb_bg'])) { ?>
+	.breadcrumb { background-color: <?php echo $conf['style_breadcrumb_bg'];?> !important; }
+	<?php } ?>
+	<?php if(!empty($conf['style_cardheader_bg'])) { ?>
+	.card-header { background-color: <?php echo $conf['style_cardheader_bg'];?> !important; }
+	<?php } ?>
+	<?php if(!empty($conf['style_threadlist_bg'])) { ?>
+	.card-threadlist .card-body { background-color: <?php echo $conf['style_threadlist_bg'];?> !important; }
+	<?php } ?>
+	<?php if(!empty($conf['style_aside_bg'])) { ?>
+	.card-forum-info { background-color: <?php echo $conf['style_aside_bg'];?> !important; }
+	<?php } ?>
+	</style>
+	<?php } ?>
+	
 </head>
 
-<body>
+<body class="<?php echo array_value($conf, 'sidebar_pos', 'right') == 'left' ? 'sidebar-left' : 'sidebar-right';?>">
 	
 	<!--{hook header_body_start.htm}-->
 	

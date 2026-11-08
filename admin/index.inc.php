@@ -27,7 +27,11 @@ switch ($route) {
 	// hook admin_index_route_case_start.php
 	case 'index':		include _include(ADMIN_PATH.'route/index.php'); 	break;
 	case 'setting': 	include _include(ADMIN_PATH.'route/setting.php'); 	break;
+	case 'style': 		include _include(ADMIN_PATH.'route/style.php'); 		break;
+	case 'tag': 		include _include(ADMIN_PATH.'route/tag.php'); 		break;
+	case 'sidebar': 	include _include(ADMIN_PATH.'route/sidebar.php'); 	break;
 	case 'forum': 		include _include(ADMIN_PATH.'route/forum.php'); 	break;
+	case 'nav': 		include _include(ADMIN_PATH.'route/nav.php'); 	break;
 	case 'friendlink': 	include _include(ADMIN_PATH.'route/friendlink.php'); 	break;
 	case 'group': 		include _include(ADMIN_PATH.'route/group.php'); 	break;
 	case 'other':		include _include(ADMIN_PATH.'route/other.php'); 	break;

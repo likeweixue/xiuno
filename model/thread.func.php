@@ -336,6 +336,25 @@ function thread_format(&$thread) {
 	$thread['top_class'] = $thread['top'] ? 'top_'.$thread['top'] : '';
 
 	$thread['pages'] = ceil($thread['posts'] / $conf['postlist_pagesize']);
+	
+	// 高亮：格式 "颜色;粗体;斜体;下划线"，如 "#ff0000;1;0;0"
+	$thread['highlight'] = empty($thread['highlight']) ? '' : $thread['highlight'];
+	$thread['subject_style'] = '';
+	if($thread['highlight']) {
+		$hl = explode(';', $thread['highlight']);
+		$color = array_value($hl, 0, '');
+		$style = '';
+		if($color && preg_match('/^#[0-9a-fA-F]{3,8}$/', $color)) {
+			$style .= 'color: '.$color.';';
+		}
+		if(!empty($hl[1])) $style .= 'font-weight: bold;';
+		if(!empty($hl[2])) $style .= 'font-style: italic;';
+		if(!empty($hl[3])) $style .= 'text-decoration: underline;';
+		if($style) $thread['subject_style'] = ' style="'.$style.'"';
+	}
+	
+	// 精华标记
+	$thread['digest'] = empty($thread['digest']) ? 0 : intval($thread['digest']);
 		
 	// hook model_thread_format_end.php
 }

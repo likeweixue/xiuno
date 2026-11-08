@@ -6,6 +6,7 @@
 	<?php $menu = G('menu');?>
 	<?php $forumlist_show = G('forumlist_show');?>
 	<?php $route = G('route');?>
+	<?php $action = G('action');?>
 	<?php $conf = G('conf');?>
 	<?php $static_version = $conf['static_version'];?>
 
@@ -43,10 +44,18 @@
 
 	<!--{hook admin_header_body_start.htm}-->
 	
-	<?php include _include(ADMIN_PATH.'view/htm/header_nav.inc.htm');?>
+	<div class="admin-layout">
 	
-	<main id="body">
-		<div class="container">
-	
-		<!--{hook admin_body_start.htm}-->
+		<?php include _include(ADMIN_PATH.'view/htm/header_nav.inc.htm');?>
 		
+		<div class="admin-body">
+		
+			<?php include _include(ADMIN_PATH.'view/htm/sidebar.inc.htm');?>
+			
+			<div class="admin-content">
+				
+				<main id="body">
+					<div class="container">
+			
+					<!--{hook admin_body_start.htm}-->
+			

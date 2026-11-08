@@ -40,6 +40,8 @@ if($action == 'base') {
 		$user_create_on = param('user_create_on', 0);
 		$user_create_email_on = param('user_create_email_on', 0);
 		$user_resetpw_on = param('user_resetpw_on', 0);
+		$sidebar_pos = param('sidebar_pos', 'right');
+		$logo = param('logo', '');
 		
 		$_lang = param('lang');
 		
@@ -53,6 +55,24 @@ if($action == 'base') {
 		$replace['user_create_email_on'] = $user_create_email_on;
 		$replace['user_resetpw_on'] = $user_resetpw_on;
 		$replace['lang'] = $_lang;
+		!in_array($sidebar_pos, array('left', 'right')) AND $sidebar_pos = 'right';
+		$replace['sidebar_pos'] = $sidebar_pos;
+		
+		// 处理 Logo 上传（base64 图片数据）
+		if(!empty($logo) && strpos($logo, 'data:image') === 0) {
+			$data = substr($logo, strpos($logo, ',') + 1);
+			$data = base64_decode($data);
+			if($data !== FALSE && !empty($data)) {
+				$ext = 'png';
+				$logo_file = "upload/logo.$ext";
+				$r = file_put_contents_try(APP_PATH.$logo_file, $data);
+				$r !== FALSE AND $replace['logo_pc_url'] = $logo_file;
+				$replace['logo_mobile_url'] = $logo_file;
+				// 同时更新 favicon（浏览器标签图标）
+				$favicon_file = "upload/favicon.$ext";
+				file_put_contents_try(APP_PATH.$favicon_file, $data);
+			}
+		}
 		
 		file_replace_var(APP_PATH.'conf/conf.php', $replace);
 	

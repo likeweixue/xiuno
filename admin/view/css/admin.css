@@ -1,3 +1,226 @@
 
 .price { font-size: 1rem; color:coral; font-weight: bold;}
 .price:before { content:"￥"; font-weight: bold;}
+
+/* ============ 后台布局：顶部一级菜单 + 左侧二级菜单 ============ */
+.admin-layout {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+/* 顶部栏：一级菜单横向排列 */
+.admin-topbar {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	background: #343a40;
+	box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.admin-topbar .navbar-toggler {
+	border: none;
+}
+.admin-topbar .navbar-brand {
+	display: flex;
+	align-items: center;
+	color: #fff;
+}
+.admin-topbar .navbar-brand img {
+	height: 26px;
+	margin-right: 8px;
+}
+.admin-topbar-title {
+	font-weight: 600;
+	font-size: 1rem;
+	color: #fff;
+}
+
+/* 一级菜单（顶部横向） */
+.admin-primary-nav .nav-item .nav-link {
+	color: #c8c8c8;
+	padding: 0.6rem 1rem;
+	font-size: 0.95rem;
+	transition: color 0.15s, background 0.15s;
+	border-radius: 0.25rem;
+}
+.admin-primary-nav .nav-item .nav-link:hover {
+	color: #fff;
+}
+.admin-primary-nav .nav-item.active .nav-link {
+	color: #fff;
+	background: #3a7afe;
+}
+
+/* 用户信息链接 */
+.admin-user-link {
+	display: flex;
+	align-items: center;
+	color: #ccc;
+	padding: 0.4rem 0.6rem;
+	text-decoration: none;
+	font-size: 0.9rem;
+	border-radius: 0.25rem;
+	transition: background 0.15s, color 0.15s;
+}
+.admin-user-link:hover {
+	color: #fff;
+	background: rgba(255,255,255,0.08);
+	text-decoration: none;
+}
+.admin-user-link img {
+	margin-right: 0.4rem;
+}
+.admin-user-link i {
+	font-size: 1rem;
+}
+
+/* 主体区域：左侧二级菜单 + 右侧内容 */
+.admin-body {
+	display: flex;
+	flex: 1;
+	align-items: stretch;
+}
+
+/* 左侧二级菜单 */
+.admin-sidebar {
+	width: 200px;
+	flex-shrink: 0;
+	background: #f5f6f8;
+	border-right: 1px solid #e5e7eb;
+	display: flex;
+	flex-direction: column;
+}
+.admin-sidebar-brand {
+	padding: 1rem 1.25rem;
+	font-weight: 600;
+	font-size: 0.95rem;
+	color: #343a40;
+	border-bottom: 1px solid #e5e7eb;
+}
+.admin-sidebar-nav {
+	list-style: none;
+	margin: 0;
+	padding: 0.5rem 0;
+}
+.admin-sub-item {
+	display: block;
+}
+.admin-sub-link {
+	display: block;
+	padding: 0.65rem 1.25rem;
+	color: #495057;
+	text-decoration: none;
+	font-size: 0.92rem;
+	transition: background 0.15s, color 0.15s;
+	border-left: 3px solid transparent;
+}
+.admin-sub-link:hover {
+	color: #3a7afe;
+	background: #eef1f6;
+	text-decoration: none;
+}
+.admin-sub-item.active .admin-sub-link {
+	color: #3a7afe;
+	background: #e8effd;
+	border-left: 3px solid #3a7afe;
+	font-weight: 600;
+}
+
+/* 三级子菜单（插件分类） */
+.admin-sidebar-sub3 {
+	list-style: none;
+	margin: 0;
+	padding: 0.2rem 0 0.4rem;
+	background: #f0f2f5;
+}
+.admin-sub3-item {
+	display: block;
+}
+.admin-sub3-link {
+	display: block;
+	padding: 0.45rem 1.25rem 0.45rem 2.5rem;
+	color: #7a8290;
+	text-decoration: none;
+	font-size: 0.85rem;
+	transition: background 0.15s, color 0.15s;
+	border-left: 3px solid transparent;
+}
+.admin-sub3-link:hover {
+	color: #3a7afe;
+	background: #e8effd;
+	text-decoration: none;
+}
+.admin-sub3-item.active .admin-sub3-link {
+	color: #3a7afe;
+	background: #e8effd;
+	border-left: 3px solid #3a7afe;
+	font-weight: 600;
+}
+
+/* 右侧内容区 */
+.admin-content {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+/* 主体 */
+#body {
+	flex: 1;
+	padding: 1.25rem 0 2rem;
+}
+
+/* 移动端：侧边栏折叠 */
+@media (max-width: 767.98px) {
+	.admin-sidebar {
+		position: fixed;
+		left: 0;
+		top: 0;
+		z-index: 1040;
+		transform: translateX(-100%);
+		transition: transform 0.25s ease;
+		box-shadow: 2px 0 12px rgba(0,0,0,0.3);
+		height: 100vh;
+	}
+	.admin-layout.sidebar-open .admin-sidebar {
+		transform: translateX(0);
+	}
+}
+
+/* ============ 上传控件（向上箭头） ============ */
+.upload-arrow {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	border: 1px dashed #adb5bd;
+	border-radius: 0.375rem;
+	color: #6c757d;
+	background: #fff;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	margin: 0;
+	overflow: hidden;
+}
+.upload-arrow:hover {
+	border-color: #3a7afe;
+	color: #3a7afe;
+	background: #f0f5ff;
+}
+.upload-arrow i {
+	font-size: 1.15rem;
+	pointer-events: none;
+}
+.upload-arrow input[type="file"] {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
+	font-size: 0;
+}

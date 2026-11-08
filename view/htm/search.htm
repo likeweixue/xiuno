@@ -1,0 +1,67 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook search_start.htm}-->
+
+<div class="row">
+	<div class="col-lg-9 main">
+		<div class="card">
+			<div class="card-header">
+				<?php echo lang('search');?>
+			</div>
+			<div class="card-body">
+				<form action="<?php echo url('search');?>" method="get" class="form-inline">
+					<input type="text" class="form-control mr-2" name="keyword" value="<?php echo htmlspecialchars($keyword);?>" placeholder="<?php echo lang('search_keyword');?>">
+					<button type="submit" class="btn btn-primary"><?php echo lang('search');?></button>
+				</form>
+				
+				<?php if($keyword != '') { ?>
+				<hr>
+				<p class="text-muted small"><?php echo lang('search_result');?>: <b><?php echo htmlspecialchars($keyword);?></b>，<?php echo lang('search_total');?>: <?php echo $total;?></p>
+				
+				<ul class="list-unstyled threadlist mb-0">
+					<?php if($threadlist) { foreach($threadlist as $_thread) { ?>
+					<li class="media thread tap" data-href="<?php echo url("thread-$_thread[tid]");?>">
+						<a href="<?php echo url("user-$_thread[uid]");?>" tabindex="-1" class="ml-1 mt-1 mr-3">
+							<img class="avatar-3" src="<?php echo $_thread['user_avatar_url'];?>">
+						</a>
+						<div class="media-body">
+							<div class="subject break-all">
+								<a href="<?php echo url("thread-$_thread[tid]");?>"><?php echo $_thread['subject'];?></a>
+							</div>
+							<div class="d-flex justify-content-between small mt-1">
+								<div>
+									<span class="username text-grey mr-1"><?php echo $_thread['username'];?></span>
+									<span class="date text-grey"><?php echo $_thread['create_date_fmt'];?></span>
+								</div>
+								<div class="text-muted small">
+									<span class="ml-2"><i class="icon-comment-o"></i> <?php echo $_thread['posts'];?></span>
+								</div>
+							</div>
+						</div>
+					</li>
+					<?php }} else { ?>
+					<li><div class="text-center text-muted py-4"><?php echo lang('search_none');?></div></li>
+					<?php } ?>
+				</ul>
+				
+				<?php if($pagination) { ?>
+				<nav class="my-3"><ul class="pagination justify-content-center flex-wrap"><?php echo $pagination; ?></ul></nav>
+				<?php } ?>
+				<?php } ?>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 d-none d-lg-block aside">
+		<a role="button" class="btn btn-primary btn-block mb-3" href="<?php echo url('thread-create-'.$fid);?>"><?php echo lang('thread_create_new');?></a>
+	</div>
+</div>
+
+<!--{hook search_end.htm}-->
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+$('li[data-active="fid-0"]').addClass('active');
+</script>
+
+<!--{hook search_js.htm}-->

@@ -9,7 +9,19 @@
 			<div class="card-header">
 				<ul class="nav nav-tabs card-header-tabs">
 					<li class="nav-item">
-						<a class="nav-link <?php echo $active == 'default' ? 'active' : '';?>" href="./<?php echo url("$route");?>"><?php echo lang('new_thread');?></a>
+						<a class="nav-link <?php echo $active == 'default' ? 'active' : '';?>" href="./<?php echo url("$route");?>"><?php echo lang('thread_new');?></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link <?php echo $active == 'new' ? 'active' : '';?>" href="<?php echo url("$route", array('orderby'=>'tid'));?>"><?php echo lang('thread_latest');?></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link <?php echo $active == 'hot' ? 'active' : '';?>" href="<?php echo url("$route", array('orderby'=>'views'));?>"><?php echo lang('thread_hot');?></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link <?php echo $active == 'top' ? 'active' : '';?>" href="<?php echo url("$route", array('orderby'=>'top'));?>"><?php echo lang('thread_top');?></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link <?php echo $active == 'digest' ? 'active' : '';?>" href="<?php echo url("$route", array('digest'=>1));?>"><?php echo lang('thread_digest');?></a>
 					</li>
 					<!--{hook index_thread_list_nav_item_after.htm}-->
 				</ul>
@@ -65,6 +77,9 @@
 			<!--{hook index_site_brief_end.htm}-->
 		</div>
 		<!--{hook index_site_brief_after.htm}-->
+		
+		<?php include _include(APP_PATH.'view/htm/sidebar_panel.inc.htm');?>
+		
 	</div>
 </div>
 

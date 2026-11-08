@@ -9,6 +9,7 @@
 		$form_subject = '';
 		$form_message = '';
 		$form_doctype = 1;
+		$form_tagnames = '';
 		$isfirst = 1;
 		$quotepid = 0;
 		$location = url("forum-'+jfid.checked()+'");
@@ -36,6 +37,15 @@
 		$filelist = array();
 	}
 	
+	// 标签回显（主题编辑/新建时）
+	!isset($form_tagnames) AND $form_tagnames = '';
+	if($route == 'thread' && $action == 'create') {
+		$form_tagnames = '';
+	} elseif($route == 'post' && $action == 'update' && $isfirst) {
+		$_tags = tag_find_by_tid($tid);
+		$form_tagnames = implode(', ', $_tags);
+	}
+	
 	// hook post_start_init.htm
 	
 	$filelist += (array)_SESSION('tmp_files');
@@ -51,7 +61,7 @@
 			</div>
 			<div class="card-body">
 				<form action="<?php echo $form_action;?>" method="post" id="form">
-					<input type="hidden" name="doctype" value="<?php echo $form_doctype;?>" />
+					<input type="hidden" name="doctype" id="doctype" value="<?php echo $form_doctype;?>" />
 					<input type="hidden" name="quotepid" value="<?php echo $quotepid;?>" />
 					
 					<!--{hook post_fid_before.htm}-->
@@ -70,10 +80,48 @@
 						<input type="text" class="form-control" placeholder="<?php echo lang('subject');?>" name="subject" value="<?php echo $form_subject;?>" id="subject">
 					</div>
 					<!--{hook post_subject_after.htm}-->
+					<!--{hook post_tag_before.htm}-->
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="<?php echo lang('tag_tips');?>" name="tagnames" value="<?php echo $form_tagnames;?>" id="tagnames">
+					</div>
+					<!--{hook post_tag_after.htm}-->
 					<?php } ?>
 					
-					<div class="form-group">
-						<textarea class="form-control" placeholder="<?php echo lang('message');?>" name="message" id="message" style="height: 300px;"><?php echo $form_message;?></textarea>
+					<!-- 编辑器工具栏：快捷语法 + 分栏 + 模式切换 + 全屏 -->
+					<div class="cb-editor-toolbar" id="cb_toolbar">
+						<div class="cb-editor-tools">
+							<button type="button" class="cb-ed-btn" data-tag="h1" title="<?php echo lang('heading');?> 1"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M6 4h2v7h8V4h2v16h-2v-7H8v7H6z"/></svg><small>1</small></button>
+							<button type="button" class="cb-ed-btn" data-tag="h2" title="<?php echo lang('heading');?> 2"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M6 4h2v7h8V4h2v16h-2v-7H8v7H6z"/></svg><small>2</small></button>
+							<button type="button" class="cb-ed-btn" data-tag="h3" title="<?php echo lang('heading');?> 3"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M6 4h2v7h8V4h2v16h-2v-7H8v7H6z"/></svg><small>3</small></button>
+							<span class="cb-ed-sep"></span>
+							<button type="button" class="cb-ed-btn" data-tag="bold" title="<?php echo lang('bold');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M7 4h6a4 4 0 0 1 4 4 4 4 0 0 1-1 2.7A4.5 4.5 0 0 1 15 18H7V4zm2 2v4h4a2 2 0 0 0 0-4H9zm0 6v4h5a2.5 2.5 0 0 0 0-5H9z"/></svg></button>
+							<button type="button" class="cb-ed-btn" data-tag="italic" title="<?php echo lang('italic');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M10 4h8v2h-3l-4 12h3v2H6v-2h3l4-12H10z"/></svg></button>
+							<button type="button" class="cb-ed-btn" data-tag="underline" title="<?php echo lang('underline');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M8 4h2v6a2 2 0 0 0 4 0V4h2v6a4 4 0 0 1-8 0V4zM6 18h12v2H6z"/></svg></button>
+							<button type="button" class="cb-ed-btn" data-tag="strike" title="<?php echo lang('strikethrough');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M8 5h8v3h-2.5c.2.4.3.8.3 1.2H7.5a4 4 0 0 0 4 4H13a2 2 0 0 1 0 4h-5a2 2 0 0 1-1.3-3.6l1.6 1.2c.1.1.1.3 0 .4H8a.5.5 0 0 1 0-1h8a.5.5 0 0 1 0 1h-.5zM5 11h14v2H5z"/></svg></button>
+							<span class="cb-ed-sep"></span>
+							<button type="button" class="cb-ed-btn" data-tag="quote" title="<?php echo lang('quote');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M7 6h4l-2 4h2a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h2zm10 0h4l-2 4h2a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h2z"/></svg></button>
+							<button type="button" class="cb-ed-btn" data-tag="code" title="<?php echo lang('code');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M8 6l-6 6 6 6 1.4-1.4L4.8 12l4.6-4.6zm8 12l6-6-6-6-1.4 1.4L19.2 12l-4.6 4.6z"/></svg></button>
+							<button type="button" class="cb-ed-btn" data-tag="hr" title="<?php echo lang('divider');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M3 11h18v2H3z"/></svg></button>
+							<button type="button" class="cb-ed-btn" data-tag="link" title="<?php echo lang('link');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M10.6 13.4a3 3 0 0 0 4.2 0l3-3a3 3 0 0 0-4.2-4.2l-1.5 1.5 1.4 1.4 1.5-1.5a1 1 0 0 1 1.4 1.4l-3 3a1 1 0 0 1-1.4-1.4l1.5-1.5-1.4-1.4-1.5 1.5a3 3 0 0 0 0 4.2zm-1.2-2.8a3 3 0 0 0-4.2 0l-3 3a3 3 0 0 0 4.2 4.2l1.5-1.5-1.4-1.4-1.5 1.5a1 1 0 0 1-1.4-1.4l3-3a1 1 0 0 1 1.4 1.4L6.5 14l1.4 1.4 1.5-1.5a3 3 0 0 0 0-4.2z"/></svg></button>
+							<button type="button" class="cb-ed-btn" data-tag="image" title="<?php echo lang('image');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm0 2v14h14V5H5zm3 3l3 4 2-2 3 4v1H8V8z"/></svg></button>
+						</div>
+						<div class="cb-editor-modes" id="doctype_select">
+							<button type="button" class="cb-ed-btn cb-ed-split" id="cb_split" title="<?php echo lang('split_preview');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm8 2v12h6V6h-6zM5 6v12h5V6H5z"/></svg></button>
+							<button type="button" class="cb-ed-mode" data-mode="1"><?php echo lang('doctype_txt');?></button>
+							<button type="button" class="cb-ed-mode" data-mode="0"><?php echo lang('doctype_html');?></button>
+							<button type="button" class="cb-ed-mode" data-mode="2"><?php echo lang('doctype_markdown');?></button>
+							<button type="button" class="cb-ed-mode" data-mode="3"><?php echo lang('doctype_bbcode');?></button>
+							<button type="button" class="cb-ed-mode" data-mode="4"><?php echo lang('doctype_yitext');?></button>
+							<button type="button" class="cb-ed-btn cb-ed-fullscreen" id="cb_fullscreen" title="<?php echo lang('fullscreen');?>"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M4 4h6v2H6v4H4V4zm10 0h6v6h-2V6h-4V4zM4 14h2v4h4v2H4v-6zm14 0h2v6h-6v-2h4v-4z"/></svg></button>
+						</div>
+					</div>
+					
+					<div class="form-group cb-editor-body" id="cb_editor_body">
+						<div class="cb-editor-pane" id="cb_editor_pane">
+							<textarea class="form-control cb-editor-textarea" placeholder="<?php echo lang('message');?>" name="message" id="message" style="height: 300px;"><?php echo $form_message;?></textarea>
+							<div class="cb-editor-rich" id="cb_rich" contenteditable="true" style="display:none;"></div>
+						</div>
+						<div class="cb-editor-preview" id="cb_preview" style="display:none;"></div>
 					</div>
 					
 					<!--{hook post_message_after.htm}-->
@@ -107,13 +155,268 @@
 <!--{hook post_end.htm}-->
 
 <?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+<script src="<?php echo $conf['view_url'];?>js/yitext.js<?php echo $static_version;?>"></script>
 <script>
 var jform = $('#form');
 var jsubmit = $('#submit');
 var jfid = jform.find('select[name="fid"]');
+var jdoctype = $('#doctype');
+var jdoctype_select = $('#doctype_select');
+var current_mode = '<?php echo $form_doctype;?>';
+var jmessage = $('#message');
+var jrich = $('#cb_rich');
+var jpreview = $('#cb_preview');
+var jsplit = $('#cb_split');
+var jfullscreen = $('#cb_fullscreen');
+var jeditor_body = $('#cb_editor_body');
+var split_on = false;
+
+// 各模式对应的语法标记
+var syntax_map = {
+	'2': { h1: ['# ', ''], h2: ['## ', ''], h3: ['### ', ''], bold: ['**', '**'], italic: ['*', '*'], underline: ['<u>', '</u>'], strike: ['~~', '~~'], quote: ['> ', ''], code: ['`', '`'], hr: ['\n---\n', ''], link: ['[', '](url)'], image: ['![', '](url)'] },
+	'3': { h1: ['[size=5]', '[/size]'], h2: ['[size=4]', '[/size]'], h3: ['[size=3]', '[/size]'], bold: ['[b]', '[/b]'], italic: ['[i]', '[/i]'], underline: ['[u]', '[/u]'], strike: ['[s]', '[/s]'], quote: ['[quote]', '[/quote]'], code: ['[code]', '[/code]'], hr: ['\n[hr]\n', ''], link: ['[url]', '[/url]'], image: ['[img]', '[/img]'] },
+	'4': { h1: ['yi ', ''], h2: ['er ', ''], h3: ['san ', ''], bold: ['jc ', ''], italic: ['xt ', ''], underline: ['xhx ', ''], strike: ['scx ', ''], quote: ['yy ', ''], code: ['hndm ', ''], hr: ['\nfgx\n', ''], link: ['lj ', ' 网址'], image: ['tplj ', ' 图片地址'] }
+};
+var html_map = {
+	h1: ['<h1>', '</h1>'], h2: ['<h2>', '</h2>'], h3: ['<h3>', '</h3>'],
+	bold: ['<strong>', '</strong>'], italic: ['<em>', '</em>'], underline: ['<u>', '</u>'], strike: ['<del>', '</del>'],
+	quote: ['<blockquote>', '</blockquote>'], code: ['<code>', '</code>'], hr: ['<hr>', ''], link: ['<a href="url">', '</a>'], image: ['<img src="', '">']
+};
+
+// 前端 markdown/bbcode 预览解析（轻量）
+function markdown_parse(s) {
+	s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	var lines = s.split('\n');
+	var out = [], in_code = false;
+	for(var i = 0; i < lines.length; i++) {
+		var line = lines[i];
+		if(/^```/.test(line)) { in_code = !in_code; out.push(in_code ? '<pre><code>' : '</code></pre>'); continue; }
+		if(in_code) { out.push(line); continue; }
+		var m;
+		if(m = line.match(/^(#{1,6})\s+(.*)$/)) { out.push('<h' + m[1].length + '>' + m[2] + '</h' + m[1].length + '>'); continue; }
+		if(m = line.match(/^[-*+]\s+(.*)$/)) { out.push('<li>' + m[1] + '</li>'); continue; }
+		if(m = line.match(/^>\s?(.*)$/)) { out.push('<blockquote>' + m[1] + '</blockquote>'); continue; }
+		if(/^(-{3,}|\*{3,})$/.test(line.trim())) { out.push('<hr>'); continue; }
+		out.push('<p>' + md_inline(line) + '</p>');
+	}
+	return out.join('\n');
+}
+function md_inline(s) {
+	s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+	s = s.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+	s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+	s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+	s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+	return s;
+}
+function bbcode_parse(s) {
+	s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	s = s.replace(/\n/g, '<br>');
+	s = s.replace(/\[b\](.*?)\[\/b\]/gi, '<strong>$1</strong>');
+	s = s.replace(/\[i\](.*?)\[\/i\]/gi, '<em>$1</em>');
+	s = s.replace(/\[u\](.*?)\[\/u\]/gi, '<u>$1</u>');
+	s = s.replace(/\[s\](.*?)\[\/s\]/gi, '<del>$1</del>');
+	s = s.replace(/\[quote\](.*?)\[\/quote\]/gi, '<blockquote>$1</blockquote>');
+	s = s.replace(/\[url\](.*?)\[\/url\]/gi, '<a href="$1">$1</a>');
+	return s;
+}
+
+// 初始化格式按钮组
+jdoctype_select.find('.cb-ed-mode').each(function() {
+	if($(this).data('mode') == current_mode) $(this).addClass('on');
+});
+jdoctype.val(current_mode);
+
+// 富文本编辑器的初始内容
+jrich.html(jmessage.val());
+
+// 应用当前模式
+function apply_mode() {
+	var is_rich = (current_mode == '0');
+	// 富文本模式：显示 contenteditable，隐藏 textarea
+	if(is_rich) {
+		jmessage.hide();
+		jrich.show();
+	} else {
+		jmessage.show();
+		jrich.hide();
+	}
+	// 非富文本/纯文本时才显示快捷语法按钮（富文本用 contenteditable 的 execCommand）
+	$('.cb-editor-tools .cb-ed-btn').each(function() {
+		var tag = $(this).data('tag');
+		// 富文本模式下快捷语法按钮也可用（execCommand），纯文本模式隐藏
+		if(current_mode == '1') {
+			$(this).hide();
+		} else {
+			$(this).show();
+		}
+	});
+	// 分栏按钮：纯文本/富文本不需要
+	if(current_mode == '1' || current_mode == '0') {
+		jsplit.hide();
+		if(split_on) toggle_split(false);
+	} else {
+		jsplit.show();
+	}
+	// 富文本模式下，快捷语法按钮改为 execCommand
+}
+
+// 切换格式
+jdoctype_select.on('click', '.cb-ed-mode', function() {
+	jdoctype_select.find('.cb-ed-mode').removeClass('on');
+	$(this).addClass('on');
+	// 切换前，把富文本内容同步回 textarea
+	if(current_mode == '0') {
+		jmessage.val(jrich.html());
+	}
+	current_mode = $(this).data('mode');
+	jdoctype.val(current_mode);
+	// 富文本模式：把 textarea 内容同步到 contenteditable
+	if(current_mode == '0') {
+		jrich.html(jmessage.val());
+	}
+	apply_mode();
+	update_preview();
+});
+
+// 富文本 contenteditable 实时同步到 textarea
+jrich.on('input', function() {
+	jmessage.val(jrich.html());
+	update_preview();
+});
+
+// 快捷语法按钮：点击在光标处插入对应语法
+$('.cb-editor-tools').on('click', '.cb-ed-btn', function() {
+	var tag = $(this).data('tag');
+	
+	// 富文本模式：用 execCommand
+	if(current_mode == '0') {
+		var cmd_map = {
+			h1: ['formatBlock', '<h1>'], h2: ['formatBlock', '<h2>'], h3: ['formatBlock', '<h3>'],
+			bold: ['bold'], italic: ['italic'], underline: ['underline'], strike: ['strikeThrough'],
+			quote: ['formatBlock', '<blockquote>'], hr: ['insertHorizontalRule']
+		};
+		var c = cmd_map[tag];
+		if(c) {
+			jrich.focus();
+			document.execCommand(c[0], false, c[1] || null);
+			jmessage.val(jrich.html());
+		} else if(tag == 'code') {
+			jrich.focus();
+			document.execCommand('formatBlock', false, '<pre>');
+			jmessage.val(jrich.html());
+		} else if(tag == 'link') {
+			var url = prompt('URL:', 'http://');
+			if(url) { jrich.focus(); document.execCommand('createLink', false, url); jmessage.val(jrich.html()); }
+		} else if(tag == 'image') {
+			var url = prompt(lang.image + ' URL:', 'http://');
+			if(url) { jrich.focus(); document.execCommand('insertImage', false, url); jmessage.val(jrich.html()); }
+		}
+		update_preview();
+		return;
+	}
+	
+	var el = jmessage[0];
+	var start = el.selectionStart || 0;
+	var end = el.selectionEnd || 0;
+	var text = jmessage.val();
+	var selected = text.substring(start, end);
+	
+	// 根据当前模式取语法
+	var wrap;
+	if(current_mode == '2' || current_mode == '3' || current_mode == '4') {
+		wrap = syntax_map[current_mode][tag];
+	} else {
+		wrap = html_map[tag];
+	}
+	if(!wrap) return;
+	
+	var line_tags = ['h1', 'h2', 'h3', 'quote', 'hr'];
+	var replacement;
+	if(line_tags.indexOf(tag) >= 0) {
+		replacement = wrap[0] + (selected || text.substring(start)) + wrap[1];
+	} else {
+		replacement = wrap[0] + (selected || '') + wrap[1];
+	}
+	
+	jmessage.val(text.substring(0, start) + replacement + text.substring(end));
+	jmessage.focus();
+	update_preview();
+});
+
+// 更新预览
+function update_preview() {
+	if(!split_on) return;
+	var src = jmessage.val();
+	var html = '';
+	if(current_mode == '2') {
+		html = markdown_parse(src);
+	} else if(current_mode == '3') {
+		html = bbcode_parse(src);
+	} else if(current_mode == '4' && typeof YiText != 'undefined') {
+		html = YiText.parse(src);
+	} else {
+		html = escape_html(src).replace(/\n/g, '<br>');
+	}
+	jpreview.html(html);
+}
+
+function escape_html(s) {
+	return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// 分栏切换
+function toggle_split(on) {
+	split_on = on;
+	if(on) {
+		jpreview.show();
+		jsplit.addClass('on');
+		update_preview();
+	} else {
+		jpreview.hide();
+		jsplit.removeClass('on');
+	}
+}
+jsplit.on('click', function() {
+	toggle_split(!split_on);
+});
+
+// 全屏切换
+jfullscreen.on('click', function() {
+	var wrap = jform.closest('.card');
+	if(!wrap.hasClass('cb-editor-fullscreen')) {
+		wrap.addClass('cb-editor-fullscreen');
+		jfullscreen.addClass('on');
+	} else {
+		wrap.removeClass('cb-editor-fullscreen');
+		jfullscreen.removeClass('on');
+	}
+});
+
+// 键盘输入时更新预览
+jmessage.on('input', function() {
+	update_preview();
+});
+
+apply_mode();
+
 jform.on('submit', function() {
 	jform.reset();
 	jsubmit.button('loading');
+	
+	// 富文本模式：把 contenteditable 内容同步到 textarea
+	if(current_mode == '0') {
+		jmessage.val(jrich.html());
+	}
+	// 同步 doctype
+	jdoctype.val(current_mode);
+	
+	// 易文本模式：前端用 YiText 渲染为 HTML 后，以 doctype=0 提交
+	if(current_mode == '4' && typeof YiText != 'undefined') {
+		jmessage.val(YiText.parse(jmessage.val(), {css: true}));
+		jdoctype.val('0');
+	}
+	
 	var postdata = jform.serialize();
 	$.xpost(jform.attr('action'), postdata, function(code, message) {
 		if(code == 0) {

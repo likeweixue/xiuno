@@ -44,7 +44,7 @@
 					
 					<div class="col-md-6"><span class="text-muted"><?php echo lang('memory_limit');?>：</span><?php echo $info['memory_limit']; ?></div>
 					<div class="col-md-6"><span class="text-muted"><?php echo lang('client_ip');?>：</span><?php echo $ip; ?></div>
-					<div class="col-md-6"><span class="text-muted"><?php echo lang('server_ip');?>：</span><?php echo _SERVER('SERVER_ADDR'); ?></div>
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('server_ip');?>：</span><?php echo $info['SERVER_ADDR']; ?></div>
 					
 				</div>
 			</div>
@@ -74,6 +74,21 @@
 		</div>
 		
 		<!--{hook admin_index_team_after.htm}-->
+		
+		<!--{hook admin_index_maintain_before.htm}-->
+		
+		<div class="card">
+			<div class="card-body">
+				<h5><?php echo lang('maintain_panel');?></h5>
+				<div class="line-height-3">
+					<div><span class="text-muted">GitHub：</span><a href="https://github.com/likeweixue/xiuno" target="_blank">https://github.com/likeweixue/xiuno</a></div>
+					<div><span class="text-muted"><?php echo lang('maintainer');?>：</span>likeweixue</div>
+					<div><span class="text-muted"><?php echo lang('ai_assist');?>：</span>WorkBuddy，DeepSeek</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--{hook admin_index_maintain_after.htm}-->
 		
 	</div>
 </div>

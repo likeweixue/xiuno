@@ -1,0 +1,98 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_nav_list_start.htm}-->
+
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<form action="<?php echo url('nav-list');?>" method="post" id="form">
+					<div class="table-responsive arrlist">
+						<table class="table" style="min-width: 800px">
+							<thead>
+								<tr>
+									<th width="80" class="text-center"><?php echo lang('nav_id');?></th>
+									<th width="160"><?php echo lang('nav_name');?></th>
+									<th><?php echo lang('nav_url');?></th>
+									<th width="100"><?php echo lang('nav_rank');?></th>
+									<th width="80" class="text-center"><?php echo lang('delete');?></th>
+								</tr>
+							<thead>
+							<tbody>
+								<?php foreach($navlist as $_id=>$_nav) { ?>
+								<tr align="center" rowid="<?php echo $_id; ?>">
+									<td><?php echo $_id;?></td>
+									<td><input type="text" class="form-control" name="name[<?php echo $_id;?>]" value="<?php echo htmlspecialchars($_nav['name']); ?>" placeholder="<?php echo lang('nav_name');?>" /></td>
+									<td><input type="text" class="form-control" name="url[<?php echo $_id;?>]" value="<?php echo htmlspecialchars($_nav['url']); ?>" placeholder="<?php echo lang('nav_url_tips');?>" /></td>
+									<td><input type="text" class="form-control" name="rank[<?php echo $_id;?>]" value="<?php echo $_nav['rank']; ?>" placeholder="<?php echo lang('nav_rank');?>" /></td>
+									<td><a class="btn row_delete" role="button" tabindex="0"><?php echo lang('delete');?></a></td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</div>
+					<p><a role="button" class="btn row_add">[+]<?php echo lang('add_new_line');?></a></p>
+					<p class="text-center">
+						<button type="submit" class="btn btn-primary" id="submit" data-loading-text="<?php echo lang('submiting');?>..." style="width: 10rem;"><?php echo lang('confirm');?></button>
+					</p>
+				</form>
+				<p class="small text-grey"><?php echo lang('tips');?>：<?php echo lang('nav_edit_tip');?></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook admin_nav_list_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+
+var maxid = <?php echo $maxid;?>;
+
+var jform = $("#form");
+var jsubmit = $("#submit");
+jform.on('submit', function(){
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.text(message).delay(3000).location();
+			return;
+		} else {
+			alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+var jarrlist = $('.arrlist');
+
+// 删除
+jarrlist.on('click', 'a.row_delete', function() {
+	var jthis = $(this);
+	var jtr = jthis.parents('tr');
+	jtr.remove();
+	return false;
+});
+
+// 增加
+$('a.row_add').on('click', function() {
+	var jclone = jarrlist.find('tr').last().clone();
+	jclone.insertAfter(jarrlist.find('tr').last());
+	var rowid = ++maxid;
+	jclone.attr('rowid', rowid);
+	jclone.find('td').first().text(rowid);
+	// 清空值
+	jclone.find('input').val('');
+	// 修改 [] 中的值为 rowid
+	jclone.find('input').attr_name_index(rowid);
+	return false;
+});
+
+</script>
+
+<!--{hook admin_nav_list_js.htm}-->

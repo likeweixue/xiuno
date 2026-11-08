@@ -21,6 +21,7 @@ include APP_PATH.'model/user.func.php';
 include APP_PATH.'model/group.func.php';
 include APP_PATH.'model/form.func.php';
 include APP_PATH.'model/forum.func.php';
+include APP_PATH.'model/nav.func.php';
 include INSTALL_PATH.'install.func.php';
 
 $action = param('action');
@@ -101,12 +102,14 @@ if(empty($action)) {
 		$adminemail = param('adminemail');
 		$adminuser = param('adminuser');
 		$adminpass = param('adminpass');
+		$adminpass2 = param('adminpass2');
 
 		empty($host) AND message('host', lang('dbhost_is_empty'));
 		empty($name) AND message('name', lang('dbname_is_empty'));
 		empty($user) AND message('user', lang('dbuser_is_empty'));
 		empty($adminpass) AND message('adminpass', lang('adminuser_is_empty'));
 		empty($adminemail) AND message('adminemail', lang('adminpass_is_empty'));
+		$adminpass != $adminpass2 AND message('adminpass2', lang('adminpass_not_match'));
 
 
 
@@ -208,6 +211,14 @@ if(empty($action)) {
 		group_update(105, array('name'=>lang('group_105')));
 
 		forum_update(1, array('name'=>lang('default_forum_name'), 'brief'=>lang('default_forum_brief')));
+
+		// 初始化导航菜单：默认版块同步到菜单栏
+		nav_create(array(
+			'fid'=>1,
+			'name'=>lang('default_forum_name'),
+			'url'=>url('forum-1'),
+			'rank'=>0,
+		));
 
 		xn_mkdir(APP_PATH.'upload/tmp', 0777);
 		xn_mkdir(APP_PATH.'upload/attach', 0777);

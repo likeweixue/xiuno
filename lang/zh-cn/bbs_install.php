@@ -38,6 +38,8 @@ return array(
 	'admin_email' => '管理员邮箱',
 	'admin_username' => '管理员用户名',
 	'admin_pw' => '管理员密码',
+	'admin_pw_again' => '再输入一次密码',
+	'adminpass_not_match' => '两次输入的密码不一致，请重新输入',
 	'installing_about_moment' => '正在安装，大概需要一分钟左右',
 	'license_title' => 'Xiuno BBS 4.0 中文版授权协议',
 	'license_content' => '感谢您选择 Xiuno BBS 4.0，它是一款国产、小巧、稳定、支持在大数据量下仍然保持高负载能力的轻论坛。它只有 20 多个表，源代码压缩后 1M 左右，运行速度非常快，处理单次请求在 0.01 秒级别，在有 APC、Yac、XCache 的环境下可以跑到 0.00x 秒，对第三方类库依赖极少，仅仅前端依赖 jquery.js，作者认为它就像一辆纯手工打造的法拉利，动力强劲，没有一丝赘肉，方便部署和维护，是一个非常好的二次开发的基石。

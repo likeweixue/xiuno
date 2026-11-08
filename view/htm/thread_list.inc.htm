@@ -33,10 +33,14 @@
 								<?php } ?>
 								<!--{hook thread_list_inc_subject_top_after.htm}-->
 								
-								<!--{hook thread_list_inc_subject_before.htm}-->
-								<a href="<?php echo url("thread-$_thread[tid]");?>"><?php echo $_thread['subject'];?></a>
-								<!--{hook thread_list_inc_subject_after.htm}-->
-								
+							<!--{hook thread_list_inc_subject_before.htm}-->
+							<a href="<?php echo url("thread-$_thread[tid]");?>"<?php echo $_thread['subject_style'];?>><?php echo $_thread['subject'];?></a>
+							<!--{hook thread_list_inc_subject_after.htm}-->
+							
+							<!--{hook thread_list_inc_digest_icon_before.htm}-->
+							<?php if(!empty($_thread['digest'])) { ?><i class="icon-diamond" style="color: #e67e22;"></i><?php } ?>
+							<!--{hook thread_list_inc_digest_icon_after.htm}-->
+							
 								<!--{hook thread_list_inc_filetype_icon_before.htm}-->
 								<?php if($_thread['files'] > 0) { ?><i class="icon small filetype other"></i><?php } ?>
 								<!--{hook thread_list_inc_filetype_icon_after.htm}-->

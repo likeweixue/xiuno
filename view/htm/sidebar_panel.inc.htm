@@ -1,0 +1,65 @@
+<?php
+// 前台侧边栏公共面板：日历 + 标签 + 友链
+// 依赖全局变量：$conf, $linklist（友链列表）, $taglist（标签列表）
+// hook sidebar_panel_start.htm
+
+if(!isset($linklist)) {
+	$linklist = function_exists('link_list') ? link_list() : array();
+}
+if(!isset($taglist)) {
+	$taglist = function_exists('tag_list') ? tag_list() : array();
+	// 标签过多时截断，最多 20 个
+	$taglist = array_slice($taglist, 0, 20);
+}
+
+// 侧边栏面板开关（默认不显示）
+$sidebar_calendar_on = array_value($conf, 'sidebar_calendar_on', 0);
+$sidebar_tag_on = array_value($conf, 'sidebar_tag_on', 0);
+$sidebar_link_on = array_value($conf, 'sidebar_link_on', 0);
+?>
+
+<?php if($sidebar_calendar_on) { ?>
+<!--{hook sidebar_calendar_before.htm}-->
+<div class="card card-calendar mb-3">
+	<div class="card-header d-flex justify-content-between align-items-center">
+		<button type="button" class="btn btn-sm btn-link cal-nav" data-delta="-1" aria-label="<?php echo lang('prev_month');?>"><i class="icon-chevron-left"></i></button>
+		<span class="cal-title"></span>
+		<button type="button" class="btn btn-sm btn-link cal-nav" data-delta="1" aria-label="<?php echo lang('next_month');?>"><i class="icon-chevron-right"></i></button>
+	</div>
+	<div class="card-body p-2">
+		<table class="table table-sm table-bordered text-center mb-0">
+			<thead><tr><th><?php echo lang('sun');?></th><th><?php echo lang('mon');?></th><th><?php echo lang('tue');?></th><th><?php echo lang('wed');?></th><th><?php echo lang('thu');?></th><th><?php echo lang('fri');?></th><th><?php echo lang('sat');?></th></tr></thead>
+			<tbody></tbody>
+		</table>
+	</div>
+</div>
+<!--{hook sidebar_calendar_after.htm}-->
+<?php } ?>
+
+<?php if($sidebar_tag_on && !empty($taglist)) { ?>
+<!--{hook sidebar_tag_before.htm}-->
+<div class="card card-tagcloud mb-3">
+	<div class="card-header"><?php echo lang('tag');?></div>
+	<div class="card-body p-2">
+		<?php foreach($taglist as $_tag) { ?>
+		<a href="<?php echo url("tag-$_tag[tagid]");?>" class="tagcloud-item"><?php echo htmlspecialchars($_tag['name']);?><span class="text-muted">(<?php echo $_tag['threads'];?>)</span></a>
+		<?php } ?>
+	</div>
+</div>
+<!--{hook sidebar_tag_after.htm}-->
+<?php } ?>
+
+<?php if($sidebar_link_on && !empty($linklist)) { ?>
+<!--{hook sidebar_friendlink_before.htm}-->
+<div class="card card-friendlink mb-3">
+	<div class="card-header"><?php echo lang('friendlink');?></div>
+	<div class="card-body p-2">
+		<?php foreach($linklist as $_link) { ?>
+		<a href="<?php echo htmlspecialchars($_link['url']);?>" target="_blank" rel="noopener" class="friendlink-item"><?php echo htmlspecialchars($_link['name']);?></a>
+		<?php } ?>
+	</div>
+</div>
+<!--{hook sidebar_friendlink_after.htm}-->
+<?php } ?>
+
+<!--{hook sidebar_panel_end.htm}-->

@@ -1,0 +1,61 @@
+<?php
+// 左侧二级菜单：仅显示当前一级菜单下的二级 tab（含三级子菜单）
+// route -> 一级菜单 key 的映射
+$admin_menu_route_map = array(
+	'index'   => 'index',
+	'setting' => 'setting',
+	'nav'     => 'setting', // 菜单栏挂在设置下
+	'sidebar' => 'setting', // 侧边栏挂在设置下
+	'style'   => 'style',
+	'forum'   => 'forum',
+	'thread'  => 'thread',
+	'tag'     => 'tag',
+	'user'    => 'user',
+	'group'   => 'user',    // 用户组挂在用户下
+	'other'   => 'other',
+	'plugin'  => 'plugin',
+);
+$_active_menu = isset($admin_menu_route_map[$route]) ? $admin_menu_route_map[$route] : 'index';
+// 二级 tab 的激活 key
+$_active_tab = $action;
+if($route == 'nav') $_active_tab = 'nav';
+if($route == 'group') $_active_tab = 'group';
+
+// 三级分类的激活 key（插件分类 cateid）
+$_cateid = param(2, 0);
+
+// 当前一级菜单对应的二级菜单
+$_submenu = array();
+if($_active_menu != 'index' && isset($menu[$_active_menu]['tab'])) {
+	$_submenu = $menu[$_active_menu]['tab'];
+}
+
+// 无二级菜单（如后台首页"全揽"）时，不显示侧边栏
+if(empty($_submenu)) return;
+?>
+
+<aside class="admin-sidebar">
+	<div class="admin-sidebar-brand">
+		<?php echo isset($menu[$_active_menu]['text']) ? $menu[$_active_menu]['text'] : lang('admin_index_page');?>
+	</div>
+	
+	<?php if(!empty($_submenu)) { ?>
+	<ul class="admin-sidebar-nav">
+		<?php foreach ($_submenu as $_tab_key=>$_tab) { ?>
+		<li class="admin-sub-item<?php echo $_active_tab == $_tab_key ? ' active' : '';?>">
+			<a class="admin-sub-link" href="<?php echo $_tab['url'];?>"><?php echo $_tab['text'];?></a>
+			
+			<?php if(!empty($_tab['sub'])) { ?>
+			<ul class="admin-sidebar-sub3">
+				<?php foreach ($_tab['sub'] as $_sub_key=>$_sub) { ?>
+				<li class="admin-sub3-item<?php echo ($_active_tab == $_tab_key && $_sub_key == 'cate'.$_cateid) ? ' active' : '';?>">
+					<a class="admin-sub3-link" href="<?php echo $_sub['url'];?>"><?php echo $_sub['text'];?></a>
+				</li>
+				<?php } ?>
+			</ul>
+			<?php } ?>
+		</li>
+		<?php } ?>
+	</ul>
+	<?php } ?>
+</aside>

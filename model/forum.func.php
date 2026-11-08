@@ -45,6 +45,18 @@ function forum_create($arr) {
 	// hook model_forum_create_start.php
 	$r = forum__create($arr);
 	forum_list_cache_delete();
+	// 自动同步导航菜单：新建版块时生成对应菜单
+	if(!empty($arr['fid']) && !empty($arr['name'])) {
+		$nav = nav_find_by_fid($arr['fid']);
+		if(empty($nav)) {
+			nav_create(array(
+				'fid'=>$arr['fid'],
+				'name'=>htmlspecialchars_decode($arr['name'], ENT_QUOTES),
+				'url'=>url("forum-{$arr['fid']}"),
+				'rank'=>isset($arr['rank']) ? intval($arr['rank']) : 0,
+			));
+		}
+	}
 	// hook model_forum_create_end.php
 	return $r;
 }
@@ -53,6 +65,13 @@ function forum_update($fid, $arr) {
 	// hook model_forum_update_start.php
 	$r = forum__update($fid, $arr);
 	forum_list_cache_delete();
+	// 自动同步导航菜单：版块名称变更时同步更新菜单
+	if(!empty($arr['name'])) {
+		$nav = nav_find_by_fid($fid);
+		if(!empty($nav)) {
+			nav_update($nav['id'], array('name'=>htmlspecialchars_decode($arr['name'], ENT_QUOTES)));
+		}
+	}
 	// hook model_forum_update_end.php
 	return $r;
 }
@@ -85,6 +104,12 @@ function forum_delete($fid) {
 	$r = forum__delete($fid);
 	
 	forum_access_delete_by_fid($fid);
+	
+	// 自动同步导航菜单：删除版块时同步删除关联菜单
+	$nav = nav_find_by_fid($fid);
+	if(!empty($nav)) {
+		nav_delete($nav['id']);
+	}
 	
 	forum_list_cache_delete();
 	// hook model_forum_delete_end.php

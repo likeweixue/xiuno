@@ -29,6 +29,15 @@
 							<!--{hook thread_subject_end.htm}-->
 						</h4>
 						<!--{hook thread_subject_after.htm}-->
+						<?php $thread_tags = tag_find_by_tid($tid); ?>
+						<?php if($thread_tags) { ?>
+						<div class="thread-tags mb-2">
+							<?php foreach($thread_tags as $_tagid=>$_tagname) { ?>
+							<a class="badge badge-secondary" href="<?php echo url("tag-$_tagid");?>"><?php echo htmlspecialchars($_tagname);?></a>
+							<?php } ?>
+						</div>
+						<?php } ?>
+						<!--{hook thread_tags_after.htm}-->
 						<div class="d-flex justify-content-between small">
 							<div>
 								<!--{hook thread_username_before.htm}-->
@@ -166,6 +175,15 @@
 	
 		<a role="button" class="btn btn-primary btn-block mb-3" href="<?php echo url('thread-create-'.$fid);?>"><?php echo lang('thread_create_new');?></a>
 		
+		<!--{hook thread_toc_before.htm}-->
+		<div class="card card-toc mb-3" id="card_toc" style="display:none;">
+			<div class="card-header"><?php echo lang('toc');?></div>
+			<div class="card-body p-2">
+				<ul class="toc-list" id="toc_list"></ul>
+			</div>
+		</div>
+		<!--{hook thread_toc_after.htm}-->
+		
 		<div class="card card-user-info">
 			<div class="m-3 text-center">
 				<a href="<?php echo url("user-$thread[uid]");?>" tabindex="-1">
@@ -299,6 +317,33 @@ jmessage.on('focus', function() {if(jmessage.t) { clearTimeout(jmessage.t); jmes
 jmessage.on('blur', function() {jmessage.t = setTimeout(function() { jmessage.css('height', '2.5rem');}, 1000); });
 
 $('li[data-active="fid-<?php echo $fid;?>"]').addClass('active');
+
+// 目录面板：识别帖子内容中的标题，点击滚动到对应位置
+$(function() {
+	var jmessage = $('div.message[isfirst="1"]');
+	if(!jmessage.length) return;
+	var jtoc = $('#toc_list');
+	var count = 0;
+	jmessage.find('h1,h2,h3,h4,h5,h6').each(function() {
+		var $h = $(this);
+		var id = 'toc_' + (++count);
+		$h.attr('id', id);
+		var level = parseInt(this.tagName.substring(1));
+		var $li = $('<li class="toc-item toc-l' + level + '"><a href="javascript:void(0)" data-target="#' + id + '">' + $h.text() + '</a></li>');
+		jtoc.append($li);
+	});
+	if(count > 0) {
+		$('#card_toc').show();
+	}
+	// 点击目录滚动到标题
+	jtoc.on('click', 'a', function() {
+		var target = $(this).data('target');
+		var $t = $(target);
+		if($t.length) {
+			$('html, body').animate({ scrollTop: $t.offset().top - 80 }, 300);
+		}
+	});
+});
 
 </script>
 

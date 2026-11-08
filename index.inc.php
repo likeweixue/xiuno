@@ -27,6 +27,9 @@ $forumlist = forum_list_cache();
 $forumlist_show = forum_list_access_filter($forumlist, $gid);	// 有权限查看的板块 / filter no permission forum
 $forumarr = arrlist_key_values($forumlist_show, 'fid', 'name');
 
+// 导航菜单 / Nav menu
+$navlist = nav_list_cache();
+
 // 头部 header.inc.htm 
 $header = array(
 	'title'=>$conf['sitename'],
@@ -64,6 +67,8 @@ if(!defined('SKIP_ROUTE')) {
 		case 'attach': 	include _include(APP_PATH.'route/attach.php'); 	break;
 		case 'post': 	include _include(APP_PATH.'route/post.php'); 	break;
 		case 'mod': 	include _include(APP_PATH.'route/mod.php'); 	break;
+		case 'search': 	include _include(APP_PATH.'route/search.php'); 	break;
+		case 'tag': 	include _include(APP_PATH.'route/tag.php'); 	break;
 		case 'browser': include _include(APP_PATH.'route/browser.php'); break;
 		// hook index_route_case_end.php
 		default: 

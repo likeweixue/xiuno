@@ -12,10 +12,11 @@ return array(
 	'forum_admin'=>'版块管理',
 	'post_admin'=>'帖子管理',
 	'thread_admin'=>'主题管理',
+	'thread'=>'帖子',
 	'plugin_admin'=>'插件管理',
 	'other_admin'=>'其他管理',
 	
-	'admin_index_page'=>'后台',
+	'admin_index_page'=>'全揽',
 	'front_index_page'=>'前台',
 	'admin_site_setting'=>'站点设置',
 	'admin_setting_base'=>'基本设置',
@@ -24,6 +25,67 @@ return array(
 	'admin_clear_tmp'=>'清理临时目录',
 	'admin_clear_cache'=>'清理缓存',
 	'admin_clear_successfully'=>'清理成功',
+	
+	// 风格
+	'style'=>'风格',
+	'admin_style_color'=>'配色设置',
+	'style_header_bg'=>'顶栏背景色',
+	'style_header_bg_tips'=>'网站顶部导航栏的背景颜色',
+	'style_header_text'=>'顶栏文字色',
+	'style_footer_bg'=>'底栏背景色',
+	'style_footer_bg_tips'=>'网站底部栏的背景颜色',
+	'style_footer_text'=>'底栏文字色',
+	'style_primary'=>'主色调',
+	'style_primary_tips'=>'发帖按钮、链接等主要元素的颜色',
+	'style_body_bg'=>'界面背景色',
+	'style_body_bg_tips'=>'页面主体区域的背景颜色',
+	'style_breadcrumb_bg'=>'路径栏背景色',
+	'style_breadcrumb_bg_tips'=>'页面顶部面包屑导航栏的背景颜色',
+	'style_cardheader_bg'=>'状态栏背景色',
+	'style_cardheader_bg_tips'=>'帖子列表顶部状态栏（含筛选标签）的背景颜色',
+	'style_threadlist_bg'=>'帖子页背景色',
+	'style_threadlist_bg_tips'=>'帖子列表内容区的背景颜色',
+	'style_aside_bg'=>'侧边栏背景色',
+	'style_aside_bg_tips'=>'版块信息侧边栏卡片、个人中心卡片的背景颜色',
+	'style_color_invalid'=>'颜色值 {color} 格式不正确，请使用 #RRGGBB 格式',
+	'style_save_failed'=>'保存失败，请检查 conf/conf.php 是否可写',
+	
+	// 维护面板
+	'maintain_panel'=>'维护面板',
+	'maintainer'=>'维护者',
+	'ai_assist'=>'AI 协助',
+	
+	// Logo 上传 + 侧边栏
+	'site_logo'=>'网站 Logo',
+	'site_logo_tips'=>'上传后同时用作浏览器标签页图标（favicon），建议使用正方形图片',
+	'sidebar_pos'=>'侧边栏位置',
+	'sidebar_left'=>'左边',
+	'sidebar_right'=>'右边',
+	
+	// 标签
+	'tag'=>'标签',
+	'admin_tag_list'=>'标签管理',
+	'tag_id'=>'标签 ID',
+	'tag_name'=>'标签名称',
+	'tag_threads'=>'帖子数',
+	'tag_rank'=>'排序',
+	'tag_delete'=>'删除',
+	'tag_add'=>'增加标签',
+	
+	// 侧边栏 / 友链
+	'admin_sidebar'=>'侧边栏',
+	'sidebar_friendlink'=>'友情链接',
+	'sidebar_friendlink_tips'=>'在前台侧边栏显示友情链接',
+	'link_id'=>'友链 ID',
+	'link_name'=>'网站名称',
+	'link_url'=>'网站地址',
+	'link_rank'=>'排序',
+	'link_add'=>'增加友链',
+	
+	// 侧边栏面板开关
+	'admin_sidebar_panel'=>'侧边栏开关',
+	'admin_sidebar_panel_tips'=>'控制前台侧边栏各面板的显示与隐藏，默认全部不显示',
+	'sidebar_calendar'=>'日历面板',
 	
 	'admin_user_list'=>'用户列表',
 	'admin_thread_batch'=>'主题批量管理',
@@ -86,6 +148,7 @@ return array(
 	
 	// 版块
 	'forum_list'=>'版块列表',
+	'admin_forum_list'=>'版块列表',
 	'forum_id'=>'版块 ID',
 	'forum_icon'=>'图标',
 	'forum_name'=>'名称',
@@ -99,6 +162,15 @@ return array(
 	'forum_edit_tip'=>'请谨慎编辑版块，一旦确定后不要轻易变动，否则可能会导致数据关联错误，一般在正式运营时就不要再变动。',
 	'forum_cant_delete_system_reserved'=>'不能删除系统保留的版块。',
 	'forum_moduid_format_tips'=>'最多允许10个，逗号隔开，如：Jack,Lisa,Mike',
+	
+	// 菜单栏
+	'nav_admin'=>'菜单栏',
+	'nav_id'=>'ID',
+	'nav_name'=>'菜单名称',
+	'nav_url'=>'链接地址',
+	'nav_rank'=>'排序',
+	'nav_url_tips'=>'如 ?forum-1.htm 或 https://example.com',
+	'nav_edit_tip'=>'菜单栏会显示在网站顶部导航栏，可自定义名称与链接；新建版块时会自动在此生成对应菜单，可自由编辑或删除。排序数字越大越靠前。',
 	'user_privilege'=>'用户权限',
 	'allow_view'=>'允许看帖',
 	'allow_thread'=>'发主题',

@@ -72,6 +72,13 @@ if($action == 'create') {
 		$pid === FALSE AND message(-1, lang('create_post_failed'));
 		$tid === FALSE AND message(-1, lang('create_thread_failed'));
 		
+		// 保存标签
+		$tagnames = param('tagnames', '');
+		if($tagnames != '') {
+			$tagarr = preg_split('/[,，\s]+/u', trim($tagnames));
+			tag_set_by_tid($tid, $tagarr);
+		}
+		
 		// hook thread_create_thread_end.php
 		message(0, lang('create_thread_sucessfully'));
 	}
